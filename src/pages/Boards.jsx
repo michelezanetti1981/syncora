@@ -143,13 +143,14 @@ export default function Boards() {
                       )}
                     </td>
                     <td className="px-4 py-3 text-right">
-                      <button
-                        onClick={() => deleteBoard.mutate(board.id)}
-                        className="p-1.5 rounded-lg hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all"
-                        title="Elimina"
-                      >
-                        <Trash2 className="w-3.5 h-3.5 text-red-400" />
-                      </button>
+                      <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-all">
+                        <button onClick={() => openEdit(board)} className="p-1.5 rounded-lg hover:bg-slate-100" title="Modifica">
+                          <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                        </button>
+                        <button onClick={() => deleteBoard.mutate(board.id)} className="p-1.5 rounded-lg hover:bg-red-50" title="Elimina">
+                          <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
