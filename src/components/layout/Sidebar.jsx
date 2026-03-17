@@ -170,7 +170,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                         navigate(`/BoardDetail?id=${board.id}`);
                       }}
                       className={cn(
-                        'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
+                        'w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left',
                         location.pathname === '/BoardDetail' && location.search.includes(board.id)
                           ? 'bg-indigo-50 text-indigo-700 font-medium'
                           : 'text-slate-700 hover:bg-slate-100'
