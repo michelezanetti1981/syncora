@@ -89,7 +89,7 @@ export default function Boards() {
           <h1 className="text-2xl font-bold text-slate-900">Bacheche</h1>
           <p className="text-sm text-slate-500 mt-1">{activeBoards.length} bacheche attive</p>
         </div>
-        <Button onClick={() => setShowDialog(true)} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+        <Button onClick={() => { setEditingBoard(null); setForm({ name: '', description: '', color: 'indigo', project_id: '' }); setShowDialog(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
           <Plus className="w-4 h-4" /> Nuova bacheca
         </Button>
       </div>
