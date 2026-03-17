@@ -17,13 +17,18 @@ export default function ImportFromMondayDialog({ open, onOpenChange, targetBoard
     setLoading(true);
     setError(null);
     setResult(null);
-    const res = await base44.functions.invoke('importFromMonday', { apiKey, mondayBoardId, targetBoardId });
-    setLoading(false);
-    if (res.data?.error) {
-      setError(res.data.error);
-    } else {
-      setResult(res.data?.imported);
-      onSuccess?.();
+    try {
+      const res = await base44.functions.invoke('importFromMonday', { apiKey, mondayBoardId, targetBoardId });
+      if (res.data?.error) {
+        setError(res.data.error);
+      } else {
+        setResult(res.data?.imported ?? 0);
+        onSuccess?.();
+      }
+    } catch (e) {
+      setError(e?.response?.data?.error || e?.message || 'Errore durante l\'importazione');
+    } finally {
+      setLoading(false);
     }
   };
 
