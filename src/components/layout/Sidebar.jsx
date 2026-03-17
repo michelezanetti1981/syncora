@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Kanban, Menu, X, FolderKanban, ChevronDown } from 'lucide-react';
+import { Kanban, Menu, X, FolderKanban, ChevronDown, LayoutDashboard, CheckSquare2 } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
