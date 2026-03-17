@@ -181,7 +181,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
         {/* Top Menu for desktop */}
         <div className="hidden lg:block p-3 border-t border-slate-200">
-          <TopMenu />
+          <TopMenu direction="up" />
         </div>
       </aside>
     </>
