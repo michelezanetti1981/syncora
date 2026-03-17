@@ -386,7 +386,93 @@ function DateCell({ value, onSave }) {
   );
 }
 
-function TaskRow({ task, assignableUsers, commissions, onSave, onDelete, onSelect }) {
+function CustomFieldCell({ value, field, onSave }) {
+  const [editing, setEditing] = useState(false);
+  const [val, setVal] = useState(value ?? '');
+  const inputRef = useRef(null);
+
+  useEffect(() => { if (editing) inputRef.current?.focus(); }, [editing]);
+
+  const commit = () => {
+    setEditing(false);
+    if (val !== (value ?? '')) onSave(val);
+  };
+
+  if (field.type === 'text') {
+    if (editing) {
+      return (
+        <input
+          ref={inputRef}
+          value={val}
+          onChange={e => setVal(e.target.value)}
+          onBlur={commit}
+          onKeyDown={e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') { setVal(value ?? ''); setEditing(false); } }}
+          className="w-full h-full px-2 py-1 text-sm bg-transparent outline-none border-0"
+        />
+      );
+    }
+    return (
+      <div onClick={() => setEditing(true)} className="w-full h-full px-2 py-1 text-sm cursor-text truncate">
+        {value || '—'}
+      </div>
+    );
+  }
+
+  if (field.type === 'number') {
+    if (editing) {
+      return (
+        <input
+          ref={inputRef}
+          type="number"
+          value={val}
+          onChange={e => setVal(e.target.value)}
+          onBlur={commit}
+          onKeyDown={e => { if (e.key === 'Enter') commit(); if (e.key === 'Escape') { setVal(value ?? ''); setEditing(false); } }}
+          className="w-full h-full px-2 py-1 text-sm text-center bg-transparent outline-none border-0"
+        />
+      );
+    }
+    return (
+      <div onClick={() => setEditing(true)} className="w-full h-full px-2 py-1 text-sm text-center cursor-text">
+        {value != null ? value : '—'}
+      </div>
+    );
+  }
+
+  if (field.type === 'date') {
+    return (
+      <div className="relative w-full h-full flex items-center justify-center px-2 py-1 cursor-pointer" onClick={() => setEditing(true)}>
+        {editing ? (
+          <input
+            ref={inputRef}
+            type="date"
+            defaultValue={value || ''}
+            onBlur={e => { onSave(e.target.value || null); setEditing(false); }}
+            onChange={e => { onSave(e.target.value || null); setEditing(false); }}
+            className="text-xs bg-transparent outline-none border border-indigo-300 rounded px-1 py-0.5 w-full"
+            autoFocus
+          />
+        ) : (
+          <span className="text-xs">{value ? format(new Date(value), 'd MMM', { locale: it }) : '—'}</span>
+        )}
+      </div>
+    );
+  }
+
+  if (field.type === 'select') {
+    return (
+      <DropdownCell
+        value={value || ''}
+        options={(field.options || []).map(opt => ({ value: opt, label: opt, color: 'bg-slate-100 text-slate-600' }))}
+        onSave={v => onSave(v)}
+      />
+    );
+  }
+
+  return <div className="w-full h-full px-2 py-1 text-sm">—</div>;
+}
+
+function TaskRow({ task, assignableUsers, commissions, customFields = [], onSave, onDelete, onSelect }) {
   const [hovered, setHovered] = useState(false);
   const [checked, setChecked] = useState(task.status === 'done');
 
