@@ -87,11 +87,23 @@ export default function CommissionDetail() {
           <p className="text-sm text-slate-500">{commission.client}</p>
         </div>
         {!editing ? (
-          <Button variant="outline" onClick={() => { setEditing(true); setEditForm({ prepaid_hours: commission.prepaid_hours, status: commission.status, report_frequency: commission.report_frequency || 'none' }); }} className="gap-2">
+          <Button variant="outline" onClick={() => { setEditing(true); setEditForm({ name: commission.name, client: commission.client, prepaid_hours: commission.prepaid_hours, status: commission.status, report_frequency: commission.report_frequency || 'none' }); }} className="gap-2">
             <Edit2 className="w-4 h-4" /> Modifica
           </Button>
         ) : (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-wrap">
+            <Input
+              value={editForm.name}
+              onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+              className="w-40"
+              placeholder="Nome commessa"
+            />
+            <Input
+              value={editForm.client}
+              onChange={(e) => setEditForm({ ...editForm, client: e.target.value })}
+              className="w-32"
+              placeholder="Cliente"
+            />
             <Input
               type="number"
               value={editForm.prepaid_hours}
