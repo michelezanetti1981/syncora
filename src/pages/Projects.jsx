@@ -8,7 +8,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Link } from 'react-router-dom';
 import EmptyState from '@/components/shared/EmptyState';
 
@@ -132,21 +131,14 @@ export default function Projects() {
                       <h3 className="font-semibold text-slate-900">{p.name}</h3>
                       {p.client && <p className="text-xs text-slate-500">{p.client}</p>}
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColors[p.status]}`}>{statusLabels[p.status]}</span>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button className="p-1 rounded-lg hover:bg-slate-100 transition-opacity">
-                            <MoreHorizontal className="w-4 h-4 text-slate-400" />
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => openEdit(p)}>Modifica</DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => deleteProject.mutate(p.id)} className="text-red-600">
-                            <Trash2 className="w-4 h-4 mr-2" /> Elimina
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <button onClick={() => openEdit(p)} className="p-1.5 rounded-lg hover:bg-slate-100 transition-colors" title="Modifica">
+                        <Pencil className="w-3.5 h-3.5 text-slate-400" />
+                      </button>
+                      <button onClick={() => deleteProject.mutate(p.id)} className="p-1.5 rounded-lg hover:bg-red-50 transition-colors" title="Elimina">
+                        <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                      </button>
                     </div>
                   </div>
 
