@@ -8,6 +8,7 @@ import { base44 } from '@/api/base44Client';
 import TopMenu from './TopMenu';
 
 export default function Sidebar({ isOpen, setIsOpen }) {
+  const [boardsExpanded, setBoardsExpanded] = useState(false);
   const location = useLocation();
 
 
