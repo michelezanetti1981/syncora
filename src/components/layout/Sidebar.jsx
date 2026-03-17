@@ -16,6 +16,7 @@ const adminNavItems = [
 ];
 
 const userNavItems = [
+  { label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard },
   { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
   { label: 'Progetti', path: '/Projects', icon: FolderKanban },
   { label: 'Bacheche', path: '/Boards', icon: Kanban },
