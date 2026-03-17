@@ -12,7 +12,6 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
   const navigate = useNavigate();
 
-
   const { data: currentUser } = useQuery({
     queryKey: ['me'],
     queryFn: () => base44.auth.me(),
@@ -47,8 +46,6 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   const visibleBoards = allBoards.filter(b =>
     isAdmin || b.created_by === currentUser?.email || myBoardIds.has(b.id)
   );
-
-
 
   const isActive = (path) => location.pathname.startsWith(path);
 
