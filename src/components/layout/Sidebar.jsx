@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo } from 'lucide-react';
+import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo, Settings } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
@@ -9,6 +9,7 @@ const navItems = [
   { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
   { label: 'Bacheche', path: '/Boards', icon: Kanban },
   { label: 'Commesse', path: '/Commissions', icon: Briefcase },
+  { label: 'Impostazioni', path: '/Settings', icon: Settings },
 ];
 
 export default function Sidebar({ isOpen, setIsOpen }) {
