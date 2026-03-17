@@ -34,6 +34,7 @@ export default function BoardDetail() {
   const [viewMode, setViewMode] = useState('kanban');
   const [membersDialogOpen, setMembersDialogOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
+  const [mondayImportOpen, setMondayImportOpen] = useState(false);
 
   const { data: board } = useQuery({
     queryKey: ['board', boardId],
