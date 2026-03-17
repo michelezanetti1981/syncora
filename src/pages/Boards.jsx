@@ -156,6 +156,13 @@ export default function Boards() {
                 ))}
               </SelectContent>
             </Select>
+            <Select value={form.project_id || 'none'} onValueChange={v => setForm({ ...form, project_id: v === 'none' ? '' : v })}>
+              <SelectTrigger><SelectValue placeholder="Progetto (opzionale)" /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Nessun progetto</SelectItem>
+                {projects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
+              </SelectContent>
+            </Select>
             <Button onClick={() => createBoard.mutate(form)} disabled={!form.name || createBoard.isPending} className="w-full bg-indigo-600 hover:bg-indigo-700">
               {createBoard.isPending ? 'Creazione...' : 'Crea bacheca'}
             </Button>
