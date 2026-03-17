@@ -138,17 +138,17 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             </button>
             {boardsExpanded && (
               <div className="mt-1 space-y-1">
-                {visibleBoards.length === 0 ? (
-                  <p className="text-xs text-slate-400 px-3 py-2">Nessuna bacheca</p>
+                {boardsInSelectedProject.length === 0 ? (
+                  <p className="text-xs text-slate-400 px-3 py-2">{selectedProjectId ? 'Nessuna bacheca' : 'Nessuna bacheca'}</p>
                 ) : (
-                  visibleBoards.map((board) => (
+                  boardsInSelectedProject.map((board) => (
                     <Link
                       key={board.id}
                       to={`/BoardDetail?id=${board.id}`}
                       onClick={() => setIsOpen(false)}
                       className={cn(
                         'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
-                        isActive('/BoardDetail')
+                        location.pathname === '/BoardDetail' && location.search.includes(board.id)
                           ? 'bg-indigo-50 text-indigo-700 font-medium'
                           : 'text-slate-700 hover:bg-slate-100'
                       )}
