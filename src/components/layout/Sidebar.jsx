@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const navItems = [
   { label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard },
