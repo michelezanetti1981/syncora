@@ -29,7 +29,14 @@ export default function Sidebar({ isOpen, setIsOpen }) {
     enabled: !!currentUser?.email,
   });
 
+  const { data: myBoardMemberships = [] } = useQuery({
+    queryKey: ['my-board-memberships', currentUser?.email],
+    queryFn: () => base44.entities.BoardMember.filter({ user_email: currentUser?.email }),
+    enabled: !!currentUser?.email,
+  });
+
   const isAdmin = currentUser?.role === 'admin';
+  const myBoardIds = new Set(myBoardMemberships.map(m => m.board_id));
 
   // Filter projects and boards visible to user
   const visibleProjects = allProjects.filter(p =>
@@ -37,7 +44,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   );
 
   const visibleBoards = allBoards.filter(b =>
-    isAdmin || !b.allowed_user_emails?.length || b.allowed_user_emails.includes(currentUser?.email)
+    isAdmin || b.created_by === currentUser?.email || myBoardIds.has(b.id)
   );
 
 
