@@ -303,6 +303,9 @@ export default function CommissionDetail() {
         </div>
       )}
 
+      {/* Chat */}
+      <CommissionChat commissionId={commissionId} />
+
       {/* Tasks list */}
       <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm">
         <div className="p-5 border-b border-slate-100">
