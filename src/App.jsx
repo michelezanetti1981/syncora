@@ -51,6 +51,7 @@ const AuthenticatedApp = () => {
         <Route path="/CommissionDetail" element={<CommissionDetail />} />
         <Route path="/MyWork" element={<MyWork />} />
         <Route path="/Settings" element={<Settings />} />
+        <Route path="/Profile" element={<Profile />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

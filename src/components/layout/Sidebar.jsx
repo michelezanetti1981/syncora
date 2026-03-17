@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo, Settings } from 'lucide-react';
+import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo, Settings, UserCircle } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
