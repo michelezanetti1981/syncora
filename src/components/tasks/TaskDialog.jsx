@@ -23,6 +23,68 @@ const priorities = [
   { value: 'urgent', label: 'Urgente' },
 ];
 
+function CustomFieldInput({ field, value, onChange }) {
+  if (field.type === 'text') {
+    return (
+      <div>
+        <Label>{field.label}</Label>
+        <Input value={value || ''} onChange={(e) => onChange(e.target.value)} placeholder={field.label} />
+      </div>
+    );
+  }
+
+  if (field.type === 'number') {
+    return (
+      <div>
+        <Label>{field.label}</Label>
+        <Input type="number" value={value ?? ''} onChange={(e) => onChange(e.target.value ? Number(e.target.value) : null)} placeholder={field.label} />
+      </div>
+    );
+  }
+
+  if (field.type === 'date') {
+    return (
+      <div>
+        <Label>{field.label}</Label>
+        <Input type="date" value={value || ''} onChange={(e) => onChange(e.target.value || null)} />
+      </div>
+    );
+  }
+
+  if (field.type === 'checkbox') {
+    return (
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={value === true}
+          onChange={(e) => onChange(e.target.checked)}
+          className="w-4 h-4 rounded border border-slate-300 cursor-pointer"
+        />
+        <Label className="cursor-pointer">{field.label}</Label>
+      </div>
+    );
+  }
+
+  if (field.type === 'select') {
+    return (
+      <div>
+        <Label>{field.label}</Label>
+        <Select value={value || ''} onValueChange={onChange}>
+          <SelectTrigger><SelectValue placeholder="Seleziona..." /></SelectTrigger>
+          <SelectContent>
+            <SelectItem value={null}>Nessuno</SelectItem>
+            {(field.options || []).map(opt => (
+              <SelectItem key={opt} value={opt}>{opt}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    );
+  }
+
+  return null;
+}
+
 export default function TaskDialog({ open, onClose, task, boardId }) {
   const qc = useQueryClient();
   const isEdit = !!task;
