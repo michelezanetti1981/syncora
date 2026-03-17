@@ -401,13 +401,13 @@ function TaskRow({ task, assignableUsers, commissions, onSave, onDelete, onSelec
       </div>
 
       {/* Commission */}
-      <div className="w-36 flex-shrink-0 border-r border-slate-100 px-2 py-2 text-xs text-slate-500 truncate text-center">
-        {commission ? `${commission.name}` : '—'}
+      <div className="w-36 flex-shrink-0 border-r border-slate-100 h-full" onClick={e => e.stopPropagation()}>
+        <CommissionCell value={task.commission_id} commissions={commissions} onSave={v => onSave(task, 'commission_id', v)} />
       </div>
 
       {/* Deadline */}
-      <div className="w-28 flex-shrink-0 border-r border-slate-100 px-2 py-2 text-xs text-slate-500 text-center">
-        {task.deadline ? format(new Date(task.deadline), 'd MMM', { locale: it }) : '—'}
+      <div className="w-28 flex-shrink-0 border-r border-slate-100 h-full" onClick={e => e.stopPropagation()}>
+        <DateCell value={task.deadline} onSave={v => onSave(task, 'deadline', v)} />
       </div>
 
       {/* Delete */}
