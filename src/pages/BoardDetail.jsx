@@ -206,6 +206,12 @@ export default function BoardDetail() {
         onSuccess={() => qc.invalidateQueries({ queryKey: ['tasks', boardId] })}
       />
 
+      <CustomFieldsManager
+        boardId={boardId}
+        open={customFieldsOpen}
+        onOpenChange={setCustomFieldsOpen}
+      />
+
       {chatOpen && <BoardChat boardId={boardId} />}
     </div>
   );
