@@ -290,6 +290,13 @@ function TableView({ tasks, onSelect, onDelete, commentCountByTask }) {
               </td>
               <td className="p-4 text-slate-600">{task.logged_hours || 0}h / {task.estimated_hours || '—'}h</td>
               <td className="p-4">
+                {(commentCountByTask[task.id] || 0) > 0 && (
+                  <span className="flex items-center gap-1 text-xs text-slate-400">
+                    <MessageSquare className="w-3.5 h-3.5" /> {commentCountByTask[task.id]}
+                  </span>
+                )}
+              </td>
+              <td className="p-4">
                 <button
                   onClick={(e) => { e.stopPropagation(); onDelete.mutate(task); }}
                   className="p-1 rounded hover:bg-red-50 transition-colors"
