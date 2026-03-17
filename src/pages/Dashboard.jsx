@@ -13,6 +13,18 @@ export default function Dashboard() {
     queryFn: () => base44.auth.me(),
   });
 
+  if (currentUser && currentUser.role !== 'admin') {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <div className="w-14 h-14 rounded-2xl bg-red-100 flex items-center justify-center mb-4">
+          <AlertTriangle className="w-7 h-7 text-red-500" />
+        </div>
+        <h2 className="text-lg font-semibold text-slate-800">Accesso negato</h2>
+        <p className="text-sm text-slate-500 mt-1">Solo gli amministratori possono accedere alla dashboard.</p>
+      </div>
+    );
+  }
+
   const { data: allBoards = [] } = useQuery({
     queryKey: ['boards'],
     queryFn: () => base44.entities.Board.filter({ status: 'active' }),
