@@ -108,20 +108,19 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                   <p className="text-xs text-slate-400 px-3 py-2">Nessun progetto</p>
                 ) : (
                   visibleProjects.map((project) => (
-                    <Link
+                    <button
                       key={project.id}
-                      to={`/Projects`}
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => setSelectedProjectId(selectedProjectId === project.id ? null : project.id)}
                       className={cn(
-                        'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
-                        isActive('/Projects')
+                        'w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left',
+                        selectedProjectId === project.id
                           ? 'bg-indigo-50 text-indigo-700 font-medium'
                           : 'text-slate-700 hover:bg-slate-100'
                       )}
                     >
                       <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: `var(--project-color-${project.color})` }} />
                       <span className="truncate">{project.name}</span>
-                    </Link>
+                    </button>
                   ))
                 )}
               </div>
