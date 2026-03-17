@@ -12,6 +12,7 @@ import Boards from '@/pages/Boards';
 import BoardDetail from '@/pages/BoardDetail';
 import Commissions from '@/pages/Commissions';
 import CommissionDetail from '@/pages/CommissionDetail';
+import MyWork from '@/pages/MyWork';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -46,6 +47,7 @@ const AuthenticatedApp = () => {
         <Route path="/BoardDetail" element={<BoardDetail />} />
         <Route path="/Commissions" element={<Commissions />} />
         <Route path="/CommissionDetail" element={<CommissionDetail />} />
+        <Route path="/MyWork" element={<MyWork />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>
