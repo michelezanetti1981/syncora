@@ -8,10 +8,24 @@ import { format, isPast, isToday } from 'date-fns';
 import { it } from 'date-fns/locale';
 
 export default function Dashboard() {
-  const { data: boards = [] } = useQuery({
+  const { data: currentUser } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const { data: allBoards = [] } = useQuery({
     queryKey: ['boards'],
     queryFn: () => base44.entities.Board.filter({ status: 'active' }),
   });
+
+  const { data: myMemberships = [] } = useQuery({
+    queryKey: ['my-memberships', currentUser?.email],
+    queryFn: () => base44.entities.BoardMember.filter({ user_email: currentUser.email }),
+    enabled: !!currentUser?.email,
+  });
+
+  const memberBoardIds = new Set(myMemberships.map(m => m.board_id));
+  const boards = allBoards.filter(b => b.created_by === currentUser?.email || memberBoardIds.has(b.id));
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
