@@ -193,6 +193,13 @@ export default function BoardDetail() {
         boardId={boardId}
       />
 
+      <ImportFromMondayDialog
+        open={mondayImportOpen}
+        onOpenChange={setMondayImportOpen}
+        targetBoardId={boardId}
+        onSuccess={() => qc.invalidateQueries({ queryKey: ['tasks', boardId] })}
+      />
+
       {chatOpen && <BoardChat boardId={boardId} />}
     </div>
   );
