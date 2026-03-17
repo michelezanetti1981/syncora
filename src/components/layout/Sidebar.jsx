@@ -123,77 +123,34 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             </Link>
           </div>
 
-          {/* Progetti Section */}
-          <div>
-            <button
-              onClick={() => setProjectsExpanded(!projectsExpanded)}
-              className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider hover:text-slate-700 transition-colors"
+          {/* Other Links */}
+          <div className="pt-2 border-t border-slate-200 space-y-1">
+            <Link
+              to="/Projects"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors',
+                isActive('/Projects')
+                  ? 'bg-indigo-50 text-indigo-700 font-medium'
+                  : 'text-slate-700 hover:bg-slate-100'
+              )}
             >
+              <FolderKanban className="w-4 h-4" />
               <span>Progetti</span>
-              <ChevronDown className={`w-3 h-3 transition-transform ${projectsExpanded ? 'rotate-180' : ''}`} />
-            </button>
-            {projectsExpanded && (
-              <div className="mt-1 space-y-1">
-                {visibleProjects.length === 0 ? (
-                  <p className="text-xs text-slate-400 px-3 py-2">Nessun progetto</p>
-                ) : (
-                  visibleProjects.map((project) => (
-                    <button
-                      key={project.id}
-                      onClick={() => setSelectedProjectId(selectedProjectId === project.id ? null : project.id)}
-                      className={cn(
-                        'w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors text-left',
-                        selectedProjectId === project.id
-                          ? 'bg-indigo-50 text-indigo-700 font-medium'
-                          : 'text-slate-700 hover:bg-slate-100'
-                      )}
-                    >
-                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: `var(--project-color-${project.color})` }} />
-                      <span className="truncate">{project.name}</span>
-                    </button>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Bacheche Section */}
-          <div>
-            <button
-              onClick={() => setBoardsExpanded(!boardsExpanded)}
-              className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider hover:text-slate-700 transition-colors"
+            </Link>
+            <Link
+              to="/Boards"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors',
+                isActive('/Boards')
+                  ? 'bg-indigo-50 text-indigo-700 font-medium'
+                  : 'text-slate-700 hover:bg-slate-100'
+              )}
             >
+              <SquareKanban className="w-4 h-4" />
               <span>Bacheche</span>
-              <ChevronDown className={`w-3 h-3 transition-transform ${boardsExpanded ? 'rotate-180' : ''}`} />
-            </button>
-            {boardsExpanded && (
-              <div className="mt-1 space-y-1">
-                {boardsInSelectedProject.length === 0 ? (
-                  <p className="text-xs text-slate-400 px-3 py-2">{selectedProjectId ? 'Nessuna bacheca' : 'Nessuna bacheca'}</p>
-                ) : (
-                  boardsInSelectedProject.map((board) => (
-                    <Link
-                      key={board.id}
-                      to={`/BoardDetail?id=${board.id}`}
-                      onClick={() => setIsOpen(false)}
-                      className={cn(
-                        'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
-                        location.pathname === '/BoardDetail' && location.search.includes(board.id)
-                          ? 'bg-indigo-50 text-indigo-700 font-medium'
-                          : 'text-slate-700 hover:bg-slate-100'
-                      )}
-                    >
-                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: `var(--board-color-${board.color})` }} />
-                      <span className="truncate">{board.name}</span>
-                    </Link>
-                  ))
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Link to Commissions */}
-          <div className="pt-2 border-t border-slate-200">
+            </Link>
             <Link
               to="/Commissions"
               onClick={() => setIsOpen(false)}
