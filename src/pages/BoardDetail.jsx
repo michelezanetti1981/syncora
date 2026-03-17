@@ -157,9 +157,9 @@ export default function BoardDetail() {
           action={<Button onClick={() => { setEditingTask(null); setTaskDialogOpen(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2"><Plus className="w-4 h-4" /> Crea task</Button>}
         />
       ) : viewMode === 'kanban' ? (
-        <KanbanView tasks={tasks} statusColumns={statusColumns} onSelect={setSelectedTask} onStatusChange={updateStatus} onDelete={deleteTask} />
+        <KanbanView tasks={tasks} statusColumns={statusColumns} onSelect={setSelectedTask} onStatusChange={updateStatus} onDelete={deleteTask} commentCountByTask={commentCountByTask} />
       ) : (
-        <TableView tasks={tasks} onSelect={setSelectedTask} onDelete={deleteTask} />
+        <TableView tasks={tasks} onSelect={setSelectedTask} onDelete={deleteTask} commentCountByTask={commentCountByTask} />
       )}
 
       <TaskDialog
