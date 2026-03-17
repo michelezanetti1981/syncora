@@ -50,6 +50,8 @@ export default function TaskDetailPanel({ open, onClose, task, onEdit, boardMemb
           commentContent: content,
           taskTitle: task.title,
           authorName: user.full_name || user.email,
+          taskId: task.id,
+          boardId: task.board_id,
         });
       }
     },
