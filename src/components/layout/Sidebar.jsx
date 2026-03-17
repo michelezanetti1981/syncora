@@ -35,13 +35,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
     isAdmin || !p.allowed_user_emails?.length || p.allowed_user_emails.includes(currentUser?.email)
   );
 
-  const visibleBoards = allBoards.filter(b =>
-    isAdmin || !b.allowed_user_emails?.length || b.allowed_user_emails.includes(currentUser?.email)
-  );
 
-  const boardsInSelectedProject = selectedProjectId
-    ? visibleBoards.filter(b => b.project_id === selectedProjectId)
-    : visibleBoards;
 
   const isActive = (path) => location.pathname.startsWith(path);
 
