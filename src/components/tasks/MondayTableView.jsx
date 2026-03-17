@@ -200,6 +200,11 @@ export default function MondayTableView({ tasks, boardId, onSelect }) {
     queryKey: ['commissions-active'],
     queryFn: () => base44.entities.Commission.filter({ status: 'active' }),
   });
+  const { data: customFields = [] } = useQuery({
+    queryKey: ['custom-fields', boardId],
+    queryFn: () => base44.entities.CustomField.filter({ board_id: boardId }, 'position'),
+    enabled: !!boardId,
+  });
 
   const assignableUsers = boardMembers.length > 0
     ? boardMembers.map(m => ({ email: m.user_email, name: m.user_name || m.user_email }))
