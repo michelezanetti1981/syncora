@@ -42,13 +42,13 @@ Deno.serve(async (req) => {
     const query = `
       query {
         boards(ids: [${mondayBoardId}]) {
+          columns { id title type }
           items_page(limit: 500) {
             items {
               id
               name
               column_values {
                 id
-                title
                 text
                 value
               }
