@@ -136,7 +136,7 @@ export default function Projects() {
                       <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColors[p.status]}`}>{statusLabels[p.status]}</span>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <button className="p-1 rounded-lg hover:bg-slate-100 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <button className="p-1 rounded-lg hover:bg-slate-100 transition-opacity">
                             <MoreHorizontal className="w-4 h-4 text-slate-400" />
                           </button>
                         </DropdownMenuTrigger>
