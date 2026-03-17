@@ -7,7 +7,6 @@ import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
 const baseNavItems = [
-  { label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard },
   { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
   { label: 'Bacheche', path: '/Boards', icon: Kanban },
   { label: 'Commesse', path: '/Commissions', icon: Briefcase },
@@ -17,7 +16,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
   const { data: currentUser } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
   const navItems = currentUser?.role === 'admin'
-    ? [...baseNavItems, { label: 'Impostazioni', path: '/Settings', icon: Settings }]
+    ? [{ label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard }, ...baseNavItems, { label: 'Impostazioni', path: '/Settings', icon: Settings }]
     : baseNavItems;
 
   return (
