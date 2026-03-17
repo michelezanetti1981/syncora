@@ -30,7 +30,7 @@ export default function TaskDialog({ open, onClose, task, boardId }) {
   const [form, setForm] = useState({
     title: '', description: '', status: 'todo', priority: 'medium',
     deadline: '', estimated_hours: '', assignee_email: '', assignee_name: '',
-    commission_id: '', group_name: 'Generale',
+    commission_id: '', group_name: 'Generale', custom_fields: {},
   });
 
   useEffect(() => {
@@ -46,12 +46,13 @@ export default function TaskDialog({ open, onClose, task, boardId }) {
         assignee_name: task.assignee_name || '',
         commission_id: task.commission_id || '',
         group_name: task.group_name || 'Generale',
+        custom_fields: task.custom_fields || {},
       });
     } else {
       setForm({
         title: '', description: '', status: 'todo', priority: 'medium',
         deadline: '', estimated_hours: '', assignee_email: '', assignee_name: '',
-        commission_id: '', group_name: 'Generale',
+        commission_id: '', group_name: 'Generale', custom_fields: {},
       });
     }
   }, [task, open]);
