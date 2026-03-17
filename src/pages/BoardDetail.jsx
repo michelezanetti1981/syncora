@@ -183,6 +183,8 @@ export default function BoardDetail() {
         onClose={() => setMembersDialogOpen(false)}
         boardId={boardId}
       />
+
+      <BoardChat boardId={boardId} />
     </div>
   );
 }
