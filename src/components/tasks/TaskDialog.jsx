@@ -206,6 +206,27 @@ export default function TaskDialog({ open, onClose, task, boardId }) {
             <Label>Gruppo</Label>
             <Input value={form.group_name} onChange={(e) => setForm({ ...form, group_name: e.target.value })} placeholder="Nome gruppo" />
           </div>
+
+          {/* Custom Fields */}
+          {customFields.length > 0 && (
+            <div className="pt-4 border-t border-slate-200">
+              <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">Campi custom</p>
+              <div className="space-y-3">
+                {customFields.map(field => (
+                  <CustomFieldInput
+                    key={field.key}
+                    field={field}
+                    value={form.custom_fields[field.key]}
+                    onChange={(val) => setForm({
+                      ...form,
+                      custom_fields: { ...form.custom_fields, [field.key]: val }
+                    })}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
+
           <Button
             onClick={() => saveMutation.mutate(form)}
             disabled={!form.title || saveMutation.isPending}
