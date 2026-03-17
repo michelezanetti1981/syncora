@@ -43,7 +43,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
   const boardsInSelectedProject = selectedProjectId
     ? visibleBoards.filter(b => b.project_id === selectedProjectId)
-    : [];
+    : visibleBoards;
 
   const isActive = (path) => location.pathname.startsWith(path);
 
