@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Plus, ArrowLeft, Trash2, Download } from 'lucide-react';
+import { Plus, ArrowLeft, Trash2, Download, Users } from 'lucide-react';
 import { exportTasksToExcel } from '@/utils/exportExcel';
+import BoardMembersDialog from '@/components/boards/BoardMembersDialog';
 import { Link } from 'react-router-dom';
 import { StatusBadge, PriorityBadge } from '@/components/shared/StatusBadge';
 import TaskDialog from '@/components/tasks/TaskDialog';
@@ -28,7 +29,8 @@ export default function BoardDetail() {
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [viewMode, setViewMode] = useState('kanban'); // kanban or table
+  const [viewMode, setViewMode] = useState('kanban');
+  const [membersDialogOpen, setMembersDialogOpen] = useState(false);
 
   const { data: board } = useQuery({
     queryKey: ['board', boardId],
@@ -36,6 +38,12 @@ export default function BoardDetail() {
       const boards = await base44.entities.Board.filter({ id: boardId });
       return boards[0];
     },
+    enabled: !!boardId,
+  });
+
+  const { data: boardMembers = [] } = useQuery({
+    queryKey: ['board-members', boardId],
+    queryFn: () => base44.entities.BoardMember.filter({ board_id: boardId }),
     enabled: !!boardId,
   });
 
@@ -110,6 +118,12 @@ export default function BoardDetail() {
               Tabella
             </button>
           </div>
+          <Button variant="outline" onClick={() => setMembersDialogOpen(true)} className="gap-2">
+            <Users className="w-4 h-4" /> Membri
+            {boardMembers.length > 0 && (
+              <span className="bg-indigo-100 text-indigo-700 text-xs px-1.5 py-0.5 rounded-full">{boardMembers.length}</span>
+            )}
+          </Button>
           <Button variant="outline" onClick={() => exportTasksToExcel(tasks, board?.name || 'tasks')} className="gap-2">
             <Download className="w-4 h-4" /> Export Excel
           </Button>
@@ -144,6 +158,13 @@ export default function BoardDetail() {
         onClose={() => setSelectedTask(null)}
         task={selectedTask}
         onEdit={handleEdit}
+        boardMembers={boardMembers}
+      />
+
+      <BoardMembersDialog
+        open={membersDialogOpen}
+        onClose={() => setMembersDialogOpen(false)}
+        boardId={boardId}
       />
     </div>
   );
