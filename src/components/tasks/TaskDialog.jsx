@@ -81,6 +81,12 @@ export default function TaskDialog({ open, onClose, task, boardId }) {
     queryFn: () => base44.entities.Commission.filter({ status: 'active' }),
   });
 
+  const { data: customFields = [] } = useQuery({
+    queryKey: ['custom-fields', boardId],
+    queryFn: () => base44.entities.CustomField.filter({ board_id: boardId }, 'position'),
+    enabled: !!boardId,
+  });
+
   const saveMutation = useMutation({
     mutationFn: async (data) => {
       const payload = {
