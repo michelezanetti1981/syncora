@@ -188,8 +188,12 @@ export default function Boards() {
                 {projects.map(p => <SelectItem key={p.id} value={p.id}>{p.name}</SelectItem>)}
               </SelectContent>
             </Select>
-            <Button onClick={() => createBoard.mutate(form)} disabled={!form.name || createBoard.isPending} className="w-full bg-indigo-600 hover:bg-indigo-700">
-              {createBoard.isPending ? 'Creazione...' : 'Crea bacheca'}
+            <Button
+              onClick={() => editingBoard ? updateBoard.mutate({ id: editingBoard.id, data: form }) : createBoard.mutate(form)}
+              disabled={!form.name || createBoard.isPending || updateBoard.isPending}
+              className="w-full bg-indigo-600 hover:bg-indigo-700"
+            >
+              {(createBoard.isPending || updateBoard.isPending) ? 'Salvataggio...' : editingBoard ? 'Salva modifiche' : 'Crea bacheca'}
             </Button>
           </div>
         </DialogContent>
