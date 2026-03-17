@@ -94,44 +94,56 @@ export default function Boards() {
           action={<Button onClick={() => setShowDialog(true)} className="bg-indigo-600 hover:bg-indigo-700 gap-2"><Plus className="w-4 h-4" /> Crea bacheca</Button>}
         />
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {activeBoards.map((board) => {
-            const boardTasks = tasks.filter(t => t.board_id === board.id);
-            const doneTasks = boardTasks.filter(t => t.status === 'done');
-            return (
-              <Link
-                key={board.id}
-                to={`/BoardDetail?id=${board.id}`}
-                className="group bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden hover:shadow-md transition-all"
-              >
-                <div className={`h-2 bg-gradient-to-r ${boardColors[board.color] || boardColors.indigo}`} />
-                <div className="p-5">
-                  <div className="flex items-start justify-between">
-                    <h3 className="font-semibold text-slate-900 group-hover:text-indigo-600 transition-colors">{board.name}</h3>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild onClick={(e) => e.preventDefault()}>
-                        <button className="p-1 rounded-lg hover:bg-slate-100 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <MoreHorizontal className="w-4 h-4 text-slate-400" />
-                        </button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={(e) => { e.preventDefault(); deleteBoard.mutate(board.id); }} className="text-red-600">
-                          <Trash2 className="w-4 h-4 mr-2" /> Elimina
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </div>
-                  {board.description && (
-                    <p className="text-sm text-slate-500 mt-1 line-clamp-2">{board.description}</p>
-                  )}
-                  <div className="flex items-center gap-4 mt-4 text-xs text-slate-500">
-                    <span>{boardTasks.length} task</span>
-                    <span>{doneTasks.length} completati</span>
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+        <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-hidden">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-slate-100 bg-slate-50">
+                <th className="text-left px-4 py-3 font-medium text-slate-500">Bacheca</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-500">Progetto</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-500">Task</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-500">Completati</th>
+                <th className="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {activeBoards.map((board) => {
+                const boardTasks = tasks.filter(t => t.board_id === board.id);
+                const doneTasks = boardTasks.filter(t => t.status === 'done');
+                const project = projects.find(p => p.id === board.project_id);
+                return (
+                  <tr key={board.id} className="border-b border-slate-50 hover:bg-slate-50 transition-colors group">
+                    <td className="px-4 py-3">
+                      <Link to={`/BoardDetail?id=${board.id}`} className="flex items-center gap-3">
+                        <div className={`w-2.5 h-2.5 rounded-full bg-gradient-to-br flex-shrink-0 ${boardColors[board.color] || boardColors.indigo}`} style={{ background: `linear-gradient(135deg, var(--tw-gradient-stops))` }} />
+                        <div className={`w-1 h-8 rounded-full bg-gradient-to-b flex-shrink-0 ${boardColors[board.color] || boardColors.indigo}`} />
+                        <div>
+                          <p className="font-medium text-slate-800 hover:text-indigo-600 transition-colors">{board.name}</p>
+                          {board.description && <p className="text-xs text-slate-400 line-clamp-1">{board.description}</p>}
+                        </div>
+                      </Link>
+                    </td>
+                    <td className="px-4 py-3 text-slate-500">{project ? project.name : <span className="text-slate-300">—</span>}</td>
+                    <td className="px-4 py-3 text-slate-600">{boardTasks.length}</td>
+                    <td className="px-4 py-3">
+                      <span className="text-slate-600">{doneTasks.length}</span>
+                      {boardTasks.length > 0 && (
+                        <span className="text-slate-400 ml-1 text-xs">({Math.round(doneTasks.length / boardTasks.length * 100)}%)</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <button
+                        onClick={() => deleteBoard.mutate(board.id)}
+                        className="p-1.5 rounded-lg hover:bg-red-50 opacity-0 group-hover:opacity-100 transition-all"
+                        title="Elimina"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-red-400" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
 
