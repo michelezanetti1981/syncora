@@ -163,12 +163,11 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                   <p className="text-xs text-slate-400 px-3 py-2">Nessuna bacheca</p>
                 ) : (
                   visibleBoards.map((board) => (
-                    <Link
+                    <button
                       key={board.id}
-                      to={`/BoardDetail?id=${board.id}`}
                       onClick={() => {
                         setIsOpen(false);
-                        window.location.reload();
+                        navigate(`/BoardDetail?id=${board.id}`);
                       }}
                       className={cn(
                         'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
