@@ -60,6 +60,13 @@ export default function Boards() {
     queryFn: () => base44.entities.Project.list('-created_date'),
   });
 
+  // Filter projects visible to current user
+  const visibleProjects = projects.filter(p =>
+    isAdmin ||
+    !p.allowed_user_emails?.length ||
+    p.allowed_user_emails.includes(currentUser?.email)
+  );
+
   const createBoard = useMutation({
     mutationFn: (data) => base44.entities.Board.create(data),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['boards'] }); setShowDialog(false); setForm({ name: '', description: '', color: 'indigo', project_id: '' }); },
