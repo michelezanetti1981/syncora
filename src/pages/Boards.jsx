@@ -64,6 +64,17 @@ export default function Boards() {
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['boards'] }); setShowDialog(false); setForm({ name: '', description: '', color: 'indigo', project_id: '' }); },
   });
 
+  const updateBoard = useMutation({
+    mutationFn: ({ id, data }) => base44.entities.Board.update(id, data),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['boards'] }); setShowDialog(false); setEditingBoard(null); setForm({ name: '', description: '', color: 'indigo', project_id: '' }); },
+  });
+
+  const openEdit = (board) => {
+    setEditingBoard(board);
+    setForm({ name: board.name, description: board.description || '', color: board.color || 'indigo', project_id: board.project_id || '' });
+    setShowDialog(true);
+  };
+
   const deleteBoard = useMutation({
     mutationFn: (id) => base44.entities.Board.delete(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['boards'] }),
