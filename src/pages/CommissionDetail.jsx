@@ -179,6 +179,51 @@ export default function CommissionDetail() {
         </div>
       </div>
 
+      {/* Referenti */}
+      <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-5 space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+            <Mail className="w-4 h-4 text-indigo-500" /> Referenti report
+          </h2>
+          <div className="flex items-center gap-2">
+            {commission.report_frequency && commission.report_frequency !== 'none' && (
+              <span className="text-xs px-2 py-1 bg-indigo-50 text-indigo-600 rounded-full font-medium">
+                Report auto: {commission.report_frequency === 'weekly' ? 'settimanale' : 'mensile'}
+              </span>
+            )}
+            <Button size="sm" variant="outline" onClick={sendReport} disabled={sendingReport || !(commission.referenti?.length)} className="gap-2">
+              <Send className="w-3.5 h-3.5" /> {sendingReport ? 'Invio...' : 'Invia ora'}
+            </Button>
+          </div>
+        </div>
+        <div className="flex gap-2">
+          <Input
+            type="email"
+            placeholder="email@referente.com"
+            value={newEmail}
+            onChange={(e) => setNewEmail(e.target.value)}
+            onKeyDown={(e) => e.key === 'Enter' && addReferente()}
+          />
+          <Button onClick={addReferente} disabled={!newEmail.trim()} className="bg-indigo-600 hover:bg-indigo-700 gap-1">
+            <Plus className="w-4 h-4" />
+          </Button>
+        </div>
+        {(commission.referenti || []).length === 0 ? (
+          <p className="text-sm text-slate-400">Nessun referente aggiunto</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {(commission.referenti || []).map(email => (
+              <span key={email} className="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-full text-sm text-slate-700">
+                {email}
+                <button onClick={() => removeReferente(email)} className="text-slate-400 hover:text-red-500 transition-colors">
+                  <X className="w-3 h-3" />
+                </button>
+              </span>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* Tasks list */}
       <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm">
         <div className="p-5 border-b border-slate-100">
