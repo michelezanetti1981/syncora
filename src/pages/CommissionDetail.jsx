@@ -87,7 +87,7 @@ export default function CommissionDetail() {
           <p className="text-sm text-slate-500">{commission.client}</p>
         </div>
         {!editing ? (
-          <Button variant="outline" onClick={() => { setEditing(true); setEditForm({ prepaid_hours: commission.prepaid_hours, status: commission.status }); }} className="gap-2">
+          <Button variant="outline" onClick={() => { setEditing(true); setEditForm({ prepaid_hours: commission.prepaid_hours, status: commission.status, report_frequency: commission.report_frequency || 'none' }); }} className="gap-2">
             <Edit2 className="w-4 h-4" /> Modifica
           </Button>
         ) : (
