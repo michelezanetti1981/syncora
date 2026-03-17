@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Plus, ArrowLeft, Trash2, Download, Users } from 'lucide-react';
+import { Plus, ArrowLeft, Trash2, Download, Users, MessageSquare } from 'lucide-react';
 import { exportTasksToExcel } from '@/utils/exportExcel';
 import BoardMembersDialog from '@/components/boards/BoardMembersDialog';
 import { Link } from 'react-router-dom';
