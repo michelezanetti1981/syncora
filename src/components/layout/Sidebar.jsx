@@ -165,7 +165,10 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                     <Link
                       key={board.id}
                       to={`/BoardDetail?id=${board.id}`}
-                      onClick={() => setIsOpen(false)}
+                      onClick={() => {
+                        setIsOpen(false);
+                        window.location.reload();
+                      }}
                       className={cn(
                         'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
                         location.pathname === '/BoardDetail' && location.search.includes(board.id)
