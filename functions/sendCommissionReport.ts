@@ -73,7 +73,7 @@ Deno.serve(async (req) => {
       </div>`;
 
     for (const email of referenti) {
-      await base44.asServiceRole.integrations.Core.SendEmail({
+      await base44.asServiceRole.functions.invoke('sendEmailSMTP', {
         to: email,
         subject: `Report commessa: ${commission.name} — ${commission.client}`,
         body,
