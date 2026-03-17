@@ -23,7 +23,7 @@ const boardColors = {
 
 export default function Boards() {
   const [showDialog, setShowDialog] = useState(false);
-  const [form, setForm] = useState({ name: '', description: '', color: 'indigo' });
+  const [form, setForm] = useState({ name: '', description: '', color: 'indigo', project_id: '' });
   const qc = useQueryClient();
 
   const { data: currentUser } = useQuery({
@@ -53,9 +53,14 @@ export default function Boards() {
     queryFn: () => base44.entities.Task.list('-created_date', 500),
   });
 
+  const { data: projects = [] } = useQuery({
+    queryKey: ['projects'],
+    queryFn: () => base44.entities.Project.list('-created_date'),
+  });
+
   const createBoard = useMutation({
     mutationFn: (data) => base44.entities.Board.create(data),
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['boards'] }); setShowDialog(false); setForm({ name: '', description: '', color: 'indigo' }); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['boards'] }); setShowDialog(false); setForm({ name: '', description: '', color: 'indigo', project_id: '' }); },
   });
 
   const deleteBoard = useMutation({
