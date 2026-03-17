@@ -92,7 +92,7 @@ export default function Boards() {
   const activeBoards = boards
     .filter(b => b.status === 'active')
     .filter(b => !b.project_id || visibleProjectIds.has(b.project_id))
-    .filter(b => filterProjectId === 'all' || b.project_id === filterProjectId);
+    .filter(b => filterProjectId === 'all' || (filterProjectId === 'none' ? !b.project_id : b.project_id === filterProjectId));
 
   return (
     <div className="space-y-6">
