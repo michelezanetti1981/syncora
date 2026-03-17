@@ -24,6 +24,13 @@ export default function MyWork() {
     enabled: !!currentUser?.email,
   });
 
+  const { data: boards = [] } = useQuery({
+    queryKey: ['boards'],
+    queryFn: () => base44.entities.Board.list(),
+  });
+
+  const boardMap = Object.fromEntries(boards.map(b => [b.id, b]));
+
   const activeTasks = tasks.filter(t => t.status !== 'done');
   const doneTasks = tasks.filter(t => t.status === 'done');
   const overdue = activeTasks.filter(t => t.deadline && isPast(new Date(t.deadline)) && !isToday(new Date(t.deadline)));
@@ -83,6 +90,11 @@ export default function MyWork() {
                   <div className="flex items-center gap-2 mt-1 flex-wrap">
                     <StatusBadge status={task.status} />
                     <PriorityBadge priority={task.priority} />
+                    {boardMap[task.board_id] && (
+                      <span className="text-xs px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-600 font-medium">
+                        {boardMap[task.board_id].name}
+                      </span>
+                    )}
                     {task.deadline && (
                       <span className={`text-xs px-1.5 py-0.5 rounded-full ${isOverdue ? 'bg-red-100 text-red-600' : 'bg-slate-100 text-slate-500'}`}>
                         {format(new Date(task.deadline), 'd MMM yyyy', { locale: it })}
