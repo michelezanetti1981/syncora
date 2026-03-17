@@ -121,8 +121,8 @@ export default function TaskDialog({ open, onClose, task, boardId }) {
   });
 
   const handleUserChange = (email) => {
-    const user = users.find(u => u.email === email);
-    setForm({ ...form, assignee_email: email, assignee_name: user?.full_name || email });
+    const member = assignableUsers.find(u => u.email === email);
+    setForm({ ...form, assignee_email: email, assignee_name: member?.name || email });
   };
 
   return (
