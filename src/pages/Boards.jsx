@@ -25,6 +25,7 @@ export default function Boards() {
   const [showDialog, setShowDialog] = useState(false);
   const [editingBoard, setEditingBoard] = useState(null);
   const [form, setForm] = useState({ name: '', description: '', color: 'indigo', project_id: '' });
+  const [filterProjectId, setFilterProjectId] = useState('all');
   const qc = useQueryClient();
 
   const { data: currentUser } = useQuery({
