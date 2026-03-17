@@ -267,6 +267,7 @@ export default function MondayTableView({ tasks, boardId, onSelect }) {
           task={task}
           assignableUsers={assignableUsers}
           commissions={commissions}
+          customFields={customFields}
           onSave={save}
           onDelete={() => deleteTask.mutate(task.id)}
           onSelect={() => onSelect(task)}
