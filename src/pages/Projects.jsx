@@ -42,10 +42,19 @@ export default function Projects() {
   const [form, setForm] = useState(emptyForm);
   const [editingProject, setEditingProject] = useState(null);
 
-  const { data: projects = [], isLoading } = useQuery({
+  const { data: currentUser } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
+  const isAdmin = currentUser?.role === 'admin';
+
+  const { data: allProjects = [], isLoading } = useQuery({
     queryKey: ['projects'],
     queryFn: () => base44.entities.Project.list('-created_date'),
   });
+
+  const projects = allProjects.filter(p =>
+    isAdmin ||
+    !p.allowed_user_emails?.length ||
+    p.allowed_user_emails.includes(currentUser?.email)
+  );
 
   const { data: users = [] } = useQuery({
     queryKey: ['users'],
