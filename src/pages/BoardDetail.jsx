@@ -188,7 +188,7 @@ export default function BoardDetail() {
         boardId={boardId}
       />
 
-      <BoardChat boardId={boardId} />
+      {chatOpen && <BoardChat boardId={boardId} />}
     </div>
   );
 }
