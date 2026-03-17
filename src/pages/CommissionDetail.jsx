@@ -9,7 +9,7 @@ import { StatusBadge, PriorityBadge } from '@/components/shared/StatusBadge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
-import CommissionChat from '@/components/commissions/CommissionChat';
+
 
 export default function CommissionDetail() {
   const urlParams = new URLSearchParams(window.location.search);
