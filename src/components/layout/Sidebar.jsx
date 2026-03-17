@@ -206,9 +206,43 @@ export default function Sidebar({ isOpen, setIsOpen }) {
           </div>
         </nav>
 
-        {/* Top Menu for desktop */}
-        <div className="hidden lg:block p-3 border-t border-slate-200">
-          <TopMenu direction="up" />
+        {/* Footer - Settings, Profile, Logout */}
+        <div className="p-3 border-t border-slate-200 space-y-1">
+          {currentUser?.role === 'admin' && (
+            <Link
+              to="/Settings"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors',
+                isActive('/Settings')
+                  ? 'bg-indigo-50 text-indigo-700 font-medium'
+                  : 'text-slate-700 hover:bg-slate-100'
+              )}
+            >
+              <Settings className="w-4 h-4" />
+              <span>Impostazioni</span>
+            </Link>
+          )}
+          <Link
+            to="/Profile"
+            onClick={() => setIsOpen(false)}
+            className={cn(
+              'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors',
+              isActive('/Profile')
+                ? 'bg-indigo-50 text-indigo-700 font-medium'
+                : 'text-slate-700 hover:bg-slate-100'
+            )}
+          >
+            <User className="w-4 h-4" />
+            <span>Il mio profilo</span>
+          </Link>
+          <button
+            onClick={() => base44.auth.logout()}
+            className="w-full flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors text-slate-700 hover:bg-slate-100"
+          >
+            <LogOut className="w-4 h-4" />
+            <span>Esci</span>
+          </button>
         </div>
       </aside>
     </>
