@@ -150,6 +150,9 @@ export default function BoardDetail() {
               <span className="bg-indigo-100 text-indigo-700 text-xs px-1.5 py-0.5 rounded-full">{boardMembers.length}</span>
             )}
           </Button>
+          <Button variant="outline" onClick={() => setCustomFieldsOpen(true)} className="gap-2">
+            <Plus className="w-4 h-4" /> Campi custom
+          </Button>
           <Button variant="outline" onClick={() => setMondayImportOpen(true)} className="gap-2">
             <Download className="w-4 h-4" /> Importa da Monday
           </Button>
