@@ -37,6 +37,7 @@ export default function BoardDetail() {
   const [membersDialogOpen, setMembersDialogOpen] = useState(false);
   const [chatOpen, setChatOpen] = useState(false);
   const [mondayImportOpen, setMondayImportOpen] = useState(false);
+  const [customFieldsOpen, setCustomFieldsOpen] = useState(false);
 
   const { data: board } = useQuery({
     queryKey: ['board', boardId],
