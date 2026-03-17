@@ -1,32 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo, Settings, UserCircle, FolderKanban } from 'lucide-react';
+import { Kanban, Menu, X, FolderKanban, ChevronDown } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
-
-const adminNavItems = [
-  { label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard },
-  { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
-  { label: 'Progetti', path: '/Projects', icon: FolderKanban },
-  { label: 'Bacheche', path: '/Boards', icon: Kanban },
-  { label: 'Commesse', path: '/Commissions', icon: Briefcase },
-  { label: 'Impostazioni', path: '/Settings', icon: Settings },
-];
-
-const userNavItems = [
-  { label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard },
-  { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
-  { label: 'Progetti', path: '/Projects', icon: FolderKanban },
-  { label: 'Bacheche', path: '/Boards', icon: Kanban },
-  { label: 'Commesse', path: '/Commissions', icon: Briefcase },
-];
+import TopMenu from './TopMenu';
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
-  const { data: currentUser } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
-  const navItems = currentUser?.role === 'admin' ? adminNavItems : userNavItems;
+  const [projectsExpanded, setProjectsExpanded] = useState(true);
+  const [boardsExpanded, setBoardsExpanded] = useState(true);
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const { data: allProjects = [] } = useQuery({
+    queryKey: ['projects'],
+    queryFn: () => base44.entities.Project.list('-created_date'),
+    enabled: !!currentUser?.email,
+  });
+
+  const { data: allBoards = [] } = useQuery({
+    queryKey: ['boards'],
+    queryFn: () => base44.entities.Board.filter({ status: 'active' }),
+    enabled: !!currentUser?.email,
+  });
+
+  const isAdmin = currentUser?.role === 'admin';
+
+  // Filter projects and boards visible to user
+  const visibleProjects = allProjects.filter(p =>
+    isAdmin || !p.allowed_user_emails?.length || p.allowed_user_emails.includes(currentUser?.email)
+  );
+
+  const visibleBoards = allBoards.filter(b =>
+    isAdmin || !b.allowed_user_emails?.length || b.allowed_user_emails.includes(currentUser?.email)
+  );
+
+  const isActive = (path) => location.pathname.startsWith(path);
 
   return (
     <>
@@ -54,61 +68,116 @@ export default function Sidebar({ isOpen, setIsOpen }) {
       {/* Sidebar */}
       <aside
         className={cn(
-          "fixed lg:static inset-y-0 left-0 z-40 w-64 bg-slate-900 text-white flex flex-col transition-transform duration-300",
-          "lg:translate-x-0",
-          isOpen ? "translate-x-0" : "-translate-x-full"
+          'fixed lg:static inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 flex flex-col transition-transform duration-300',
+          'lg:translate-x-0',
+          isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
       >
-        <div className="p-6 border-b border-white/10">
-          <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
+        {/* Header */}
+        <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+          <h1 className="text-lg font-bold tracking-tight flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-indigo-500 flex items-center justify-center">
-              <Kanban className="w-4 h-4" />
+              <Kanban className="w-4 h-4 text-white" />
             </div>
-            WorkBoard
+            <span className="text-slate-900">WorkBoard</span>
           </h1>
+          <div className="lg:hidden">
+            <TopMenu />
+          </div>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1">
-          {navItems.map((item) => {
-            const isActive = location.pathname.startsWith(item.path);
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all",
-                  isActive
-                    ? "bg-indigo-500/20 text-indigo-300"
-                    : "text-slate-400 hover:text-white hover:bg-white/5"
+        {/* Content */}
+        <nav className="flex-1 overflow-y-auto p-3 space-y-4">
+          {/* Progetti Section */}
+          <div>
+            <button
+              onClick={() => setProjectsExpanded(!projectsExpanded)}
+              className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider hover:text-slate-700 transition-colors"
+            >
+              <span>Progetti</span>
+              <ChevronDown className={`w-3 h-3 transition-transform ${projectsExpanded ? 'rotate-180' : ''}`} />
+            </button>
+            {projectsExpanded && (
+              <div className="mt-1 space-y-1">
+                {visibleProjects.length === 0 ? (
+                  <p className="text-xs text-slate-400 px-3 py-2">Nessun progetto</p>
+                ) : (
+                  visibleProjects.map((project) => (
+                    <Link
+                      key={project.id}
+                      to={`/Projects`}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                        'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
+                        isActive('/Projects')
+                          ? 'bg-indigo-50 text-indigo-700 font-medium'
+                          : 'text-slate-700 hover:bg-slate-100'
+                      )}
+                    >
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: `var(--project-color-${project.color})` }} />
+                      <span className="truncate">{project.name}</span>
+                    </Link>
+                  ))
                 )}
-              >
-                <item.icon className="w-4 h-4" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-white/10">
-          <Link
-          to="/Profile"
-          onClick={() => setIsOpen(false)}
-          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all mb-2 ${location.pathname === '/Profile' ? 'bg-indigo-500/20 text-indigo-300' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
-        >
-          <div className="w-6 h-6 rounded-full bg-indigo-700 flex items-center justify-center overflow-hidden flex-shrink-0">
-            {currentUser?.avatar_url ? (
-              <img src={currentUser.avatar_url} alt="" className="w-full h-full object-cover" />
-            ) : (
-              <UserCircle className="w-4 h-4" />
+              </div>
             )}
           </div>
-          <div className="min-w-0">
-            <p className="truncate leading-tight">{currentUser?.full_name || currentUser?.email || 'Profilo'}</p>
-            <p className="text-xs text-slate-500 truncate leading-tight">{currentUser?.email}</p>
+
+          {/* Bacheche Section */}
+          <div>
+            <button
+              onClick={() => setBoardsExpanded(!boardsExpanded)}
+              className="w-full flex items-center justify-between px-3 py-2 text-xs font-semibold text-slate-500 uppercase tracking-wider hover:text-slate-700 transition-colors"
+            >
+              <span>Bacheche</span>
+              <ChevronDown className={`w-3 h-3 transition-transform ${boardsExpanded ? 'rotate-180' : ''}`} />
+            </button>
+            {boardsExpanded && (
+              <div className="mt-1 space-y-1">
+                {visibleBoards.length === 0 ? (
+                  <p className="text-xs text-slate-400 px-3 py-2">Nessuna bacheca</p>
+                ) : (
+                  visibleBoards.map((board) => (
+                    <Link
+                      key={board.id}
+                      to={`/BoardDetail?id=${board.id}`}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                        'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
+                        isActive('/BoardDetail')
+                          ? 'bg-indigo-50 text-indigo-700 font-medium'
+                          : 'text-slate-700 hover:bg-slate-100'
+                      )}
+                    >
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: `var(--board-color-${board.color})` }} />
+                      <span className="truncate">{board.name}</span>
+                    </Link>
+                  ))
+                )}
+              </div>
+            )}
           </div>
-        </Link>
-        <p className="text-xs text-slate-500">© 2026 WorkBoard</p>
+
+          {/* Link to Commissions */}
+          <div className="pt-2 border-t border-slate-200">
+            <Link
+              to="/Commissions"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors',
+                isActive('/Commissions')
+                  ? 'bg-indigo-50 text-indigo-700 font-medium'
+                  : 'text-slate-700 hover:bg-slate-100'
+              )}
+            >
+              <span>Commesse</span>
+            </Link>
+          </div>
+        </nav>
+
+        {/* Top Menu for desktop */}
+        <div className="hidden lg:block p-3 border-t border-slate-200">
+          <TopMenu />
         </div>
       </aside>
     </>
