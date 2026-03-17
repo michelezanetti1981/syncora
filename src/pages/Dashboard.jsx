@@ -44,10 +44,14 @@ export default function Dashboard() {
     queryFn: () => base44.entities.Task.list('-created_date', 100),
   });
 
-  const { data: commissions = [] } = useQuery({
+  const { data: allCommissions = [] } = useQuery({
     queryKey: ['commissions'],
     queryFn: () => base44.entities.Commission.filter({ status: 'active' }),
   });
+
+  const commissions = currentUser?.role === 'admin'
+    ? allCommissions
+    : allCommissions.filter(c => !c.allowed_user_emails?.length || c.allowed_user_emails.includes(currentUser?.email));
 
   const activeTasks = tasks.filter(t => t.status !== 'done');
   const completedTasks = tasks.filter(t => t.status === 'done');
