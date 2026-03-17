@@ -87,6 +87,7 @@ export default function Projects() {
       responsible_email: p.responsible_email || '',
       responsible_name: p.responsible_name || '',
       start_date: p.start_date || '', end_date: p.end_date || '',
+      allowed_user_emails: p.allowed_user_emails || [],
     });
     setShowDialog(true);
   };
