@@ -74,37 +74,36 @@ Deno.serve(async (req) => {
       return Response.json({ error: data.errors[0].message }, { status: 400 });
     }
 
-    const items = data?.data?.boards?.[0]?.items_page?.items;
-    if (!items) {
+    const board = data?.data?.boards?.[0];
+    if (!board) {
       return Response.json({ error: 'Bacheca non trovata o API key non valida' }, { status: 400 });
     }
+
+    const columns = board.columns || [];
+    const items = board.items_page?.items || [];
 
     if (items.length === 0) {
       return Response.json({ imported: 0 });
     }
 
+    // Build a map of column id -> column type/title for smart detection
+    const colMeta = {};
+    columns.forEach(c => { colMeta[c.id] = c; });
+
     const tasks = items.map((item, idx) => {
-      // Look for status column
+      // Status: find column of type 'color' (status) or id 'status'
       const statusCol = item.column_values.find(c =>
-        c.id === 'status' ||
-        c.title?.toLowerCase() === 'status' ||
-        c.title?.toLowerCase() === 'stato'
+        c.id === 'status' || colMeta[c.id]?.type === 'color'
       );
 
-      // Look for description/notes column
+      // Description: find column of type 'text' or 'long_text'
       const descCol = item.column_values.find(c =>
-        c.id === 'text' ||
-        c.title?.toLowerCase() === 'notes' ||
-        c.title?.toLowerCase() === 'description' ||
-        c.title?.toLowerCase() === 'descrizione'
+        colMeta[c.id]?.type === 'text' || colMeta[c.id]?.type === 'long_text'
       );
 
-      // Look for person column (assignee)
+      // Assignee: find column of type 'multiple-person' or 'person'
       const personCol = item.column_values.find(c =>
-        c.id === 'person' ||
-        c.title?.toLowerCase() === 'person' ||
-        c.title?.toLowerCase() === 'owner' ||
-        c.title?.toLowerCase() === 'assegnato'
+        colMeta[c.id]?.type === 'multiple-person' || colMeta[c.id]?.type === 'person'
       );
 
       return {
