@@ -5,16 +5,58 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
-import { Settings, Image, Mail, Save, Upload } from 'lucide-react';
+import { Settings, Image, Mail, Save, Upload, Users, Trash2, UserPlus, Shield } from 'lucide-react';
 
 export default function SettingsPage() {
+  const qc = useQueryClient();
+  const [activeTab, setActiveTab] = useState('general');
+
+  const { data: currentUser } = useQuery({
+    queryKey: ['me'],
+    queryFn: () => base44.auth.me(),
+  });
+
+  const isAdmin = currentUser?.role === 'admin';
+
+  return (
+    <div className="space-y-6 max-w-2xl">
+      <div>
+        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+          <Settings className="w-6 h-6" /> Impostazioni
+        </h1>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex bg-slate-100 rounded-lg p-0.5 w-fit">
+        <button
+          onClick={() => setActiveTab('general')}
+          className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${activeTab === 'general' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}
+        >
+          Generali
+        </button>
+        {isAdmin && (
+          <button
+            onClick={() => setActiveTab('users')}
+            className={`px-4 py-2 text-sm font-medium rounded-md transition-colors flex items-center gap-1.5 ${activeTab === 'users' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}
+          >
+            <Users className="w-3.5 h-3.5" /> Utenti
+          </button>
+        )}
+      </div>
+
+      {activeTab === 'general' && <GeneralSettings />}
+      {activeTab === 'users' && isAdmin && <UsersSettings />}
+    </div>
+  );
+}
+
+function GeneralSettings() {
   const qc = useQueryClient();
   const [form, setForm] = useState({
     company_name: '', logo_url: '',
     smtp_host: '', smtp_port: 587, smtp_user: '', smtp_password: '',
     smtp_from_name: '', smtp_from_email: '', smtp_secure: false,
   });
-  const [logoFile, setLogoFile] = useState(null);
   const [uploadingLogo, setUploadingLogo] = useState(false);
   const [testingSmtp, setTestingSmtp] = useState(false);
   const [testResult, setTestResult] = useState(null);
@@ -78,14 +120,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="space-y-6 max-w-2xl">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
-          <Settings className="w-6 h-6" /> Impostazioni
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">Configura il logo e le impostazioni email dell'app</p>
-      </div>
-
+    <div className="space-y-6">
       {/* Generale */}
       <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 space-y-4">
         <h2 className="font-semibold text-slate-800 flex items-center gap-2">
@@ -162,6 +197,101 @@ export default function SettingsPage() {
       <Button onClick={() => saveMutation.mutate(form)} disabled={saveMutation.isPending} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
         <Save className="w-4 h-4" /> {saveMutation.isPending ? 'Salvataggio...' : 'Salva impostazioni'}
       </Button>
+    </div>
+  );
+}
+
+function UsersSettings() {
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('user');
+  const [inviting, setInviting] = useState(false);
+  const [inviteResult, setInviteResult] = useState(null);
+
+  const { data: users = [], isLoading, refetch } = useQuery({
+    queryKey: ['users-admin'],
+    queryFn: async () => {
+      const res = await base44.functions.invoke('listUsers', {});
+      return res.data?.users || [];
+    },
+  });
+
+  const handleInvite = async () => {
+    setInviting(true);
+    setInviteResult(null);
+    await base44.users.inviteUser(inviteEmail, inviteRole);
+    setInviteResult({ ok: true, msg: `Invito inviato a ${inviteEmail}` });
+    setInviteEmail('');
+    setInviting(false);
+    refetch();
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Invite */}
+      <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-6 space-y-4">
+        <h2 className="font-semibold text-slate-800 flex items-center gap-2">
+          <UserPlus className="w-4 h-4 text-indigo-500" /> Invita utente
+        </h2>
+        <div className="flex gap-2">
+          <Input
+            type="email"
+            placeholder="email@esempio.com"
+            value={inviteEmail}
+            onChange={e => setInviteEmail(e.target.value)}
+            className="flex-1"
+          />
+          <select
+            value={inviteRole}
+            onChange={e => setInviteRole(e.target.value)}
+            className="border border-input rounded-md px-3 py-2 text-sm bg-transparent"
+          >
+            <option value="user">Utente</option>
+            <option value="admin">Admin</option>
+          </select>
+          <Button onClick={handleInvite} disabled={!inviteEmail || inviting} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
+            <UserPlus className="w-4 h-4" /> {inviting ? 'Invio...' : 'Invita'}
+          </Button>
+        </div>
+        {inviteResult && (
+          <div className={`text-sm px-4 py-2 rounded-lg ${inviteResult.ok ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-600'}`}>
+            {inviteResult.msg}
+          </div>
+        )}
+      </div>
+
+      {/* Users list */}
+      <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm">
+        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+          <h2 className="font-semibold text-slate-800 flex items-center gap-2">
+            <Users className="w-4 h-4 text-indigo-500" /> Utenti registrati ({users.length})
+          </h2>
+        </div>
+        {isLoading ? (
+          <div className="p-6 text-center text-slate-400 text-sm">Caricamento...</div>
+        ) : (
+          <div className="divide-y divide-slate-50">
+            {users.map(u => (
+              <div key={u.id} className="flex items-center justify-between px-5 py-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
+                    <span className="text-sm font-semibold text-indigo-600">
+                      {(u.full_name || u.email).charAt(0).toUpperCase()}
+                    </span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-slate-800">{u.full_name || '—'}</p>
+                    <p className="text-xs text-slate-500">{u.email}</p>
+                  </div>
+                </div>
+                <span className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-600'}`}>
+                  {u.role === 'admin' && <Shield className="w-3 h-3" />}
+                  {u.role === 'admin' ? 'Admin' : 'Utente'}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
