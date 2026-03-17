@@ -6,7 +6,16 @@ import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-const baseNavItems = [
+const adminNavItems = [
+  { label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard },
+  { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
+  { label: 'Progetti', path: '/Projects', icon: FolderKanban },
+  { label: 'Bacheche', path: '/Boards', icon: Kanban },
+  { label: 'Commesse', path: '/Commissions', icon: Briefcase },
+  { label: 'Impostazioni', path: '/Settings', icon: Settings },
+];
+
+const userNavItems = [
   { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
   { label: 'Progetti', path: '/Projects', icon: FolderKanban },
   { label: 'Bacheche', path: '/Boards', icon: Kanban },
