@@ -6,9 +6,24 @@ Deno.serve(async (req) => {
   const user = await base44.auth.me();
   if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { mentionedEmails, commentContent, taskTitle, authorName } = await req.json();
+  const { mentionedEmails, commentContent, taskTitle, authorName, taskId, boardId } = await req.json();
 
   if (!mentionedEmails?.length) return Response.json({ sent: 0 });
+
+  // Create in-app notifications
+  await Promise.allSettled(
+    mentionedEmails.map(email =>
+      base44.asServiceRole.entities.Notification.create({
+        user_email: email,
+        type: 'mention',
+        title: `${authorName} ti ha menzionato`,
+        message: `Nel task "${taskTitle}": ${commentContent.substring(0, 80)}`,
+        read: false,
+        board_id: boardId || null,
+        task_id: taskId || null,
+      })
+    )
+  );
 
   const results = await Promise.allSettled(
     mentionedEmails.map(email =>
