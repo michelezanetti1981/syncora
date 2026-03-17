@@ -4,13 +4,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { StatusBadge, PriorityBadge } from '@/components/shared/StatusBadge';
-import { Clock, Paperclip, MessageSquare, Send, Trash2, Upload, User } from 'lucide-react';
+import { Clock, Paperclip, MessageSquare, Trash2, Upload, User } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
+import CommentInput from './CommentInput';
 
-export default function TaskDetailPanel({ open, onClose, task, onEdit }) {
+export default function TaskDetailPanel({ open, onClose, task, onEdit, boardMembers = [] }) {
   const qc = useQueryClient();
   const [comment, setComment] = useState('');
   const [logHours, setLogHours] = useState('');
@@ -26,17 +26,31 @@ export default function TaskDetailPanel({ open, onClose, task, onEdit }) {
     queryFn: () => base44.entities.Commission.list(),
   });
 
+  const { data: users = [] } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => base44.entities.User.list(),
+  });
+
   const addComment = useMutation({
-    mutationFn: async (content) => {
+    mutationFn: async ({ content, mentionedEmails }) => {
       const user = await base44.auth.me();
-      return base44.entities.Comment.create({
+      await base44.entities.Comment.create({
         task_id: task.id,
         content,
         author_email: user.email,
         author_name: user.full_name || user.email,
       });
+      // Send mention notifications
+      if (mentionedEmails?.length) {
+        await base44.functions.invoke('sendMentionNotification', {
+          mentionedEmails,
+          commentContent: content,
+          taskTitle: task.title,
+          authorName: user.full_name || user.email,
+        });
+      }
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['comments', task.id] }); setComment(''); },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['comments', task.id] }); },
   });
 
   const deleteComment = useMutation({
