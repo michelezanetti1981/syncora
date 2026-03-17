@@ -160,10 +160,10 @@ export default function Boards() {
         </div>
       )}
 
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
+      <Dialog open={showDialog} onOpenChange={(o) => { setShowDialog(o); if (!o) setEditingBoard(null); }}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Nuova bacheca</DialogTitle>
+            <DialogTitle>{editingBoard ? 'Modifica bacheca' : 'Nuova bacheca'}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
             <Input placeholder="Nome bacheca" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
