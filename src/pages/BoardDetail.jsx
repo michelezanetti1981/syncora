@@ -136,6 +136,9 @@ export default function BoardDetail() {
               Tabella
             </button>
           </div>
+          <Button variant="outline" onClick={() => setChatOpen(o => !o)} className="gap-2">
+            <MessageSquare className="w-4 h-4" /> Chat
+          </Button>
           <Button variant="outline" onClick={() => setMembersDialogOpen(true)} className="gap-2">
             <Users className="w-4 h-4" /> Membri
             {boardMembers.length > 0 && (
