@@ -1,11 +1,10 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Kanban, Briefcase, Menu, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { motion, AnimatePresence } from 'framer-motion';
+import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo } from 'lucide-react';
 
 const navItems = [
   { label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard },
+  { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
   { label: 'Bacheche', path: '/Boards', icon: Kanban },
   { label: 'Commesse', path: '/Commissions', icon: Briefcase },
 ];
