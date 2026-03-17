@@ -43,7 +43,10 @@ export default function Boards() {
   });
 
   const memberBoardIds = new Set(myMemberships.map(m => m.board_id));
-  const boards = allBoards.filter(b => b.created_by === currentUser?.email || memberBoardIds.has(b.id));
+  const isAdmin = currentUser?.role === 'admin';
+  const boards = isAdmin
+    ? allBoards
+    : allBoards.filter(b => b.created_by === currentUser?.email || memberBoardIds.has(b.id));
 
   const { data: tasks = [] } = useQuery({
     queryKey: ['tasks'],
