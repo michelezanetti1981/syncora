@@ -56,10 +56,21 @@ export default function TaskDialog({ open, onClose, task, boardId }) {
     }
   }, [task, open]);
 
+  const { data: boardMembers = [] } = useQuery({
+    queryKey: ['board-members', boardId],
+    queryFn: () => base44.entities.BoardMember.filter({ board_id: boardId }),
+    enabled: !!boardId,
+  });
+
   const { data: users = [] } = useQuery({
     queryKey: ['users'],
     queryFn: () => base44.entities.User.list(),
   });
+
+  // Build assignable users: board members + all app users with matching email
+  const assignableUsers = boardMembers.length > 0
+    ? boardMembers.map(m => ({ email: m.user_email, name: m.user_name || m.user_email }))
+    : users.map(u => ({ email: u.email, name: u.full_name || u.email }));
 
   const { data: commissions = [] } = useQuery({
     queryKey: ['commissions-active'],
