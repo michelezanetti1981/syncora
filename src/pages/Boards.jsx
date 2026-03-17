@@ -106,6 +106,33 @@ export default function Boards() {
         </Button>
       </div>
 
+      {/* Filtro progetto */}
+      {visibleProjects.length > 0 && (
+        <div className="flex items-center gap-2 flex-wrap">
+          <button
+            onClick={() => setFilterProjectId('all')}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${filterProjectId === 'all' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+          >
+            Tutti
+          </button>
+          <button
+            onClick={() => setFilterProjectId('none')}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${filterProjectId === 'none' ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+          >
+            Senza progetto
+          </button>
+          {visibleProjects.map(p => (
+            <button
+              key={p.id}
+              onClick={() => setFilterProjectId(p.id)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${filterProjectId === p.id ? 'bg-indigo-600 text-white' : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'}`}
+            >
+              {p.name}
+            </button>
+          ))}
+        </div>
+      )}
+
       {isLoading ? (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {[1,2,3].map(i => <div key={i} className="h-40 bg-white rounded-2xl animate-pulse" />)}
