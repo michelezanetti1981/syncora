@@ -26,8 +26,8 @@ const statusColumns = [
 ];
 
 export default function BoardDetail() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const boardId = urlParams.get('id');
+  const [searchParams] = useSearchParams();
+  const boardId = searchParams.get('id');
   const qc = useQueryClient();
 
   const [taskDialogOpen, setTaskDialogOpen] = useState(false);
