@@ -218,6 +218,7 @@ function UsersSettings() {
   const [inviteRole, setInviteRole] = useState('user');
   const [inviting, setInviting] = useState(false);
   const [inviteResult, setInviteResult] = useState(null);
+  const [updatingRole, setUpdatingRole] = useState(null);
 
   const { data: users = [], isLoading, refetch } = useQuery({
     queryKey: ['users-admin'],
@@ -234,6 +235,13 @@ function UsersSettings() {
     setInviteResult({ ok: true, msg: `Invito inviato a ${inviteEmail}` });
     setInviteEmail('');
     setInviting(false);
+    refetch();
+  };
+
+  const handleRoleChange = async (userId, newRole) => {
+    setUpdatingRole(userId);
+    await base44.entities.User.update(userId, { role: newRole });
+    setUpdatingRole(null);
     refetch();
   };
 
@@ -273,7 +281,7 @@ function UsersSettings() {
 
       {/* Users list */}
       <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm">
-        <div className="p-5 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-5 border-b border-slate-100">
           <h2 className="font-semibold text-slate-800 flex items-center gap-2">
             <Users className="w-4 h-4 text-indigo-500" /> Utenti registrati ({users.length})
           </h2>
@@ -295,10 +303,15 @@ function UsersSettings() {
                     <p className="text-xs text-slate-500">{u.email}</p>
                   </div>
                 </div>
-                <span className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium ${u.role === 'admin' ? 'bg-indigo-100 text-indigo-700' : 'bg-slate-100 text-slate-600'}`}>
-                  {u.role === 'admin' && <Shield className="w-3 h-3" />}
-                  {u.role === 'admin' ? 'Admin' : 'Utente'}
-                </span>
+                <select
+                  value={u.role || 'user'}
+                  onChange={e => handleRoleChange(u.id, e.target.value)}
+                  disabled={updatingRole === u.id}
+                  className="border border-input rounded-md px-2 py-1 text-xs bg-transparent disabled:opacity-50"
+                >
+                  <option value="user">Utente</option>
+                  <option value="admin">Admin</option>
+                </select>
               </div>
             ))}
           </div>
