@@ -105,6 +105,18 @@ export default function BoardDetail() {
     setTaskDialogOpen(true);
   };
 
+  // Reset state when board changes
+  useEffect(() => {
+    setTaskDialogOpen(false);
+    setEditingTask(null);
+    setSelectedTask(null);
+    setViewMode('kanban');
+    setMembersDialogOpen(false);
+    setChatOpen(false);
+    setMondayImportOpen(false);
+    setCustomFieldsOpen(false);
+  }, [boardId]);
+
   if (!board && !isLoading) {
     return (
       <div className="text-center py-20">
