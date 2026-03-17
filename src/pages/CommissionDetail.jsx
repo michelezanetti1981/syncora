@@ -107,6 +107,14 @@ export default function CommissionDetail() {
                 <SelectItem value="on_hold">In pausa</SelectItem>
               </SelectContent>
             </Select>
+            <Select value={editForm.report_frequency} onValueChange={(v) => setEditForm({ ...editForm, report_frequency: v })}>
+              <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">No report auto</SelectItem>
+                <SelectItem value="weekly">Settimanale</SelectItem>
+                <SelectItem value="monthly">Mensile</SelectItem>
+              </SelectContent>
+            </Select>
             <Button size="icon" onClick={() => updateCommission.mutate(editForm)} className="bg-emerald-600 hover:bg-emerald-700">
               <Check className="w-4 h-4" />
             </Button>
