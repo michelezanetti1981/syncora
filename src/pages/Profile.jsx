@@ -89,6 +89,14 @@ export default function Profile() {
         <Button onClick={handleSave} className="bg-indigo-600 hover:bg-indigo-700 gap-2 w-full">
           <Save className="w-4 h-4" /> {saved ? 'Salvato!' : 'Salva modifiche'}
         </Button>
+
+        <Button
+          variant="outline"
+          onClick={() => base44.auth.logout()}
+          className="w-full gap-2 text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300"
+        >
+          <LogOut className="w-4 h-4" /> Esci dall'account
+        </Button>
       </div>
     </div>
   );
