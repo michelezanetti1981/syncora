@@ -33,6 +33,7 @@ const emptyForm = {
   project_manager_email: '', project_manager_name: '',
   responsible_email: '', responsible_name: '',
   start_date: '', end_date: '',
+  allowed_user_emails: [],
 };
 
 export default function Projects() {
