@@ -93,6 +93,36 @@ export default function Sidebar({ isOpen, setIsOpen }) {
 
         {/* Content */}
         <nav className="flex-1 overflow-y-auto p-3 space-y-4">
+          {/* Dashboard & Il mio lavoro */}
+          <div className="space-y-1">
+            <Link
+              to="/Dashboard"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors',
+                isActive('/Dashboard')
+                  ? 'bg-indigo-50 text-indigo-700 font-medium'
+                  : 'text-slate-700 hover:bg-slate-100'
+              )}
+            >
+              <LayoutDashboard className="w-4 h-4" />
+              <span>Dashboard</span>
+            </Link>
+            <Link
+              to="/MyWork"
+              onClick={() => setIsOpen(false)}
+              className={cn(
+                'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors',
+                isActive('/MyWork')
+                  ? 'bg-indigo-50 text-indigo-700 font-medium'
+                  : 'text-slate-700 hover:bg-slate-100'
+              )}
+            >
+              <CheckSquare2 className="w-4 h-4" />
+              <span>Il mio lavoro</span>
+            </Link>
+          </div>
+
           {/* Progetti Section */}
           <div>
             <button
