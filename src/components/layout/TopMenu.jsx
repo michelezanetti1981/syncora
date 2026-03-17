@@ -26,12 +26,13 @@ export default function TopMenu({ direction = 'down' }) {
   useEffect(() => {
     if (open && buttonRef.current) {
       const rect = buttonRef.current.getBoundingClientRect();
+      const top = direction === 'up' ? rect.top - 4 : rect.bottom + 4;
       setPosition({
-        top: rect.bottom + 4,
+        top,
         left: rect.left,
       });
     }
-  }, [open]);
+  }, [open, direction]);
 
   return (
     <div className="relative">
