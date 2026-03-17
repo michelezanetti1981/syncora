@@ -120,7 +120,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
             </Link>
           </div>
 
-          {/* Other Links */}
+          {/* Projects Section */}
           <div className="pt-2 border-t border-slate-200 space-y-1">
             <Link
               to="/Projects"
@@ -135,19 +135,55 @@ export default function Sidebar({ isOpen, setIsOpen }) {
               <FolderKanban className="w-4 h-4" />
               <span>Progetti</span>
             </Link>
+          </div>
+
+          {/* Bacheche Expandable Section */}
+          <div className="pt-2 border-t border-slate-200">
+            <button
+              onClick={() => setBoardsExpanded(!boardsExpanded)}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-sm transition-colors text-slate-700 hover:bg-slate-100"
+            >
+              <div className="flex items-center gap-2">
+                <SquareKanban className="w-4 h-4" />
+                <span>Bacheche</span>
+              </div>
+              <ChevronDown className={`w-4 h-4 transition-transform ${boardsExpanded ? 'rotate-180' : ''}`} />
+            </button>
+            {boardsExpanded && (
+              <div className="mt-1 space-y-1 pl-2">
+                {visibleBoards.length === 0 ? (
+                  <p className="text-xs text-slate-400 px-3 py-2">Nessuna bacheca</p>
+                ) : (
+                  visibleBoards.map((board) => (
+                    <Link
+                      key={board.id}
+                      to={`/BoardDetail?id=${board.id}`}
+                      onClick={() => setIsOpen(false)}
+                      className={cn(
+                        'flex items-center gap-2 px-3 py-2 rounded-lg text-sm transition-colors',
+                        location.pathname === '/BoardDetail' && location.search.includes(board.id)
+                          ? 'bg-indigo-50 text-indigo-700 font-medium'
+                          : 'text-slate-700 hover:bg-slate-100'
+                      )}
+                    >
+                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: `var(--board-color-${board.color})` }} />
+                      <span className="truncate text-xs">{board.name}</span>
+                    </Link>
+                  ))
+                )}
+              </div>
+            )}
             <Link
               to="/Boards"
               onClick={() => setIsOpen(false)}
-              className={cn(
-                'flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm transition-colors',
-                isActive('/Boards')
-                  ? 'bg-indigo-50 text-indigo-700 font-medium'
-                  : 'text-slate-700 hover:bg-slate-100'
-              )}
+              className="block px-3 py-2 text-xs text-indigo-600 hover:text-indigo-700 font-medium mt-1"
             >
-              <SquareKanban className="w-4 h-4" />
-              <span>Bacheche</span>
+              Vedi tutte →
             </Link>
+          </div>
+
+          {/* Commissions Link */}
+          <div className="pt-2 border-t border-slate-200">
             <Link
               to="/Commissions"
               onClick={() => setIsOpen(false)}
