@@ -564,6 +564,21 @@ function TaskRow({ task, assignableUsers, commissions, customFields = [], onSave
         <DateCell value={task.deadline} onSave={v => onSave(task, 'deadline', v)} />
       </div>
 
+      {/* Custom fields */}
+      {customFields.map(field => (
+        <div key={field.key} className="w-28 flex-shrink-0 border-r border-slate-100 h-full" onClick={e => e.stopPropagation()}>
+          <CustomFieldCell
+            value={task.custom_fields?.[field.key]}
+            field={field}
+            onSave={v => {
+              const custom = task.custom_fields || {};
+              custom[field.key] = v;
+              onSave(task, 'custom_fields', custom);
+            }}
+          />
+        </div>
+      ))}
+
       {/* Delete */}
       <div className="w-10 flex-shrink-0 flex items-center justify-center">
         {hovered && (
