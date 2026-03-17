@@ -10,6 +10,7 @@ import TopMenu from './TopMenu';
 export default function Sidebar({ isOpen, setIsOpen }) {
   const [boardsExpanded, setBoardsExpanded] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
 
   const { data: currentUser } = useQuery({
