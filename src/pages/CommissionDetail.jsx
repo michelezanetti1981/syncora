@@ -19,6 +19,31 @@ export default function CommissionDetail() {
   const [newEmail, setNewEmail] = useState('');
   const [sendingReport, setSendingReport] = useState(false);
 
+  const { data: currentUser } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
+  const isAdmin = currentUser?.role === 'admin';
+
+  const { data: allUsers = [] } = useQuery({
+    queryKey: ['users-admin'],
+    queryFn: async () => {
+      const res = await base44.functions.invoke('listUsers', {});
+      return res.data?.users || [];
+    },
+    enabled: isAdmin,
+  });
+
+  const addAllowedUser = async (email) => {
+    const current = commission.allowed_user_emails || [];
+    if (current.includes(email)) return;
+    await base44.entities.Commission.update(commissionId, { allowed_user_emails: [...current, email] });
+    qc.invalidateQueries({ queryKey: ['commission', commissionId] });
+  };
+
+  const removeAllowedUser = async (email) => {
+    const current = commission.allowed_user_emails || [];
+    await base44.entities.Commission.update(commissionId, { allowed_user_emails: current.filter(e => e !== email) });
+    qc.invalidateQueries({ queryKey: ['commission', commissionId] });
+  };
+
   const { data: commission } = useQuery({
     queryKey: ['commission', commissionId],
     queryFn: async () => {
