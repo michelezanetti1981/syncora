@@ -178,7 +178,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
                     >
                       <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: `var(--board-color-${board.color})` }} />
                       <span className="truncate text-xs">{board.name}</span>
-                    </Link>
+                    </button>
                   ))
                 )}
               </div>
