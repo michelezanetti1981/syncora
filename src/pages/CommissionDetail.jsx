@@ -16,6 +16,8 @@ export default function CommissionDetail() {
   const qc = useQueryClient();
   const [editing, setEditing] = useState(false);
   const [editForm, setEditForm] = useState({});
+  const [newEmail, setNewEmail] = useState('');
+  const [sendingReport, setSendingReport] = useState(false);
 
   const { data: commission } = useQuery({
     queryKey: ['commission', commissionId],
@@ -40,6 +42,27 @@ export default function CommissionDetail() {
       setEditing(false);
     },
   });
+
+  const addReferente = async () => {
+    if (!newEmail.trim()) return;
+    const current = commission.referenti || [];
+    if (current.includes(newEmail.trim())) return;
+    await base44.entities.Commission.update(commissionId, { referenti: [...current, newEmail.trim()] });
+    qc.invalidateQueries({ queryKey: ['commission', commissionId] });
+    setNewEmail('');
+  };
+
+  const removeReferente = async (email) => {
+    const current = commission.referenti || [];
+    await base44.entities.Commission.update(commissionId, { referenti: current.filter(e => e !== email) });
+    qc.invalidateQueries({ queryKey: ['commission', commissionId] });
+  };
+
+  const sendReport = async () => {
+    setSendingReport(true);
+    await base44.functions.invoke('sendCommissionReport', { commissionId });
+    setSendingReport(false);
+  };
 
   if (!commission) {
     return (
