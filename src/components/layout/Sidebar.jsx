@@ -3,17 +3,22 @@ import { Link, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo, Settings } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
+import { useQuery } from '@tanstack/react-query';
+import { base44 } from '@/api/base44Client';
 
-const navItems = [
+const baseNavItems = [
   { label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard },
   { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
   { label: 'Bacheche', path: '/Boards', icon: Kanban },
   { label: 'Commesse', path: '/Commissions', icon: Briefcase },
-  { label: 'Impostazioni', path: '/Settings', icon: Settings },
 ];
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
+  const { data: currentUser } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
+  const navItems = currentUser?.role === 'admin'
+    ? [...baseNavItems, { label: 'Impostazioni', path: '/Settings', icon: Settings }]
+    : baseNavItems;
 
   return (
     <>
