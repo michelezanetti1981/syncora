@@ -110,6 +110,9 @@ export default function BoardDetail() {
               Tabella
             </button>
           </div>
+          <Button variant="outline" onClick={() => exportTasksToExcel(tasks, board?.name || 'tasks')} className="gap-2">
+            <Download className="w-4 h-4" /> Export Excel
+          </Button>
           <Button onClick={() => { setEditingTask(null); setTaskDialogOpen(true); }} className="bg-indigo-600 hover:bg-indigo-700 gap-2">
             <Plus className="w-4 h-4" /> Nuovo task
           </Button>
