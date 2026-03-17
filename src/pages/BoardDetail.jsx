@@ -243,23 +243,43 @@ export default function BoardDetail() {
   );
 }
 
-function KanbanView({ tasks, statusColumns, onSelect, onStatusChange, onDelete, commentCountByTask }) {
+function KanbanView({ tasks, statusColumns, onSelect, onDelete, commentCountByTask }) {
   return (
     <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 lg:-mx-8 lg:px-8">
       {statusColumns.map(col => {
         const colTasks = tasks.filter(t => t.status === col.key);
         return (
-          <div key={col.key} className="flex-shrink-0 w-72">
-            <div className={`flex items-center gap-2 mb-3 pb-2 border-b-2 ${col.color}`}>
-              <h3 className="text-sm font-semibold text-slate-700">{col.label}</h3>
-              <span className="text-xs text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">{colTasks.length}</span>
-            </div>
-            <div className="space-y-2">
-              {colTasks.map(task => (
-                <TaskCard key={task.id} task={task} onClick={() => onSelect(task)} onDelete={onDelete} commentCount={commentCountByTask[task.id] || 0} />
-              ))}
-            </div>
-          </div>
+          <Droppable key={col.key} droppableId={col.key}>
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.droppableProps}
+                className={`flex-shrink-0 w-72 rounded-lg p-3 transition-colors ${snapshot.isDraggingOver ? 'bg-indigo-50' : 'bg-transparent'}`}
+              >
+                <div className={`flex items-center gap-2 mb-3 pb-2 border-b-2 ${col.color}`}>
+                  <h3 className="text-sm font-semibold text-slate-700">{col.label}</h3>
+                  <span className="text-xs text-slate-400 bg-slate-100 px-1.5 py-0.5 rounded-full">{colTasks.length}</span>
+                </div>
+                <div className="space-y-2">
+                  {colTasks.map((task, idx) => (
+                    <Draggable key={task.id} draggableId={task.id} index={idx}>
+                      {(provided, snapshot) => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className={snapshot.isDragging ? 'opacity-50' : 'opacity-100'}
+                        >
+                          <TaskCard task={task} onClick={() => onSelect(task)} onDelete={onDelete} commentCount={commentCountByTask[task.id] || 0} />
+                        </div>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </div>
+              </div>
+            )}
+          </Droppable>
         );
       })}
     </div>
