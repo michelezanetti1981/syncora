@@ -186,7 +186,7 @@ export default function BoardDetail() {
   );
 }
 
-function KanbanView({ tasks, statusColumns, onSelect, onStatusChange, onDelete }) {
+function KanbanView({ tasks, statusColumns, onSelect, onStatusChange, onDelete, commentCountByTask }) {
   return (
     <div className="flex gap-4 overflow-x-auto pb-4 -mx-4 px-4 lg:-mx-8 lg:px-8">
       {statusColumns.map(col => {
@@ -199,7 +199,7 @@ function KanbanView({ tasks, statusColumns, onSelect, onStatusChange, onDelete }
             </div>
             <div className="space-y-2">
               {colTasks.map(task => (
-                <TaskCard key={task.id} task={task} onClick={() => onSelect(task)} onDelete={onDelete} />
+                <TaskCard key={task.id} task={task} onClick={() => onSelect(task)} onDelete={onDelete} commentCount={commentCountByTask[task.id] || 0} />
               ))}
             </div>
           </div>
@@ -209,7 +209,7 @@ function KanbanView({ tasks, statusColumns, onSelect, onStatusChange, onDelete }
   );
 }
 
-function TaskCard({ task, onClick, onDelete }) {
+function TaskCard({ task, onClick, onDelete, commentCount }) {
   const isOverdue = task.deadline && isPast(new Date(task.deadline)) && !isToday(new Date(task.deadline)) && task.status !== 'done';
 
   return (
@@ -234,24 +234,31 @@ function TaskCard({ task, onClick, onDelete }) {
           </span>
         )}
       </div>
-      {task.assignee_name && (
-        <div className="mt-2 flex items-center gap-1.5">
-          <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center">
-            <span className="text-[10px] font-medium text-indigo-600">{task.assignee_name.charAt(0).toUpperCase()}</span>
+      <div className="mt-2 flex items-center justify-between">
+        {task.assignee_name ? (
+          <div className="flex items-center gap-1.5">
+            <div className="w-5 h-5 rounded-full bg-indigo-100 flex items-center justify-center">
+              <span className="text-[10px] font-medium text-indigo-600">{task.assignee_name.charAt(0).toUpperCase()}</span>
+            </div>
+            <span className="text-xs text-slate-500">{task.assignee_name}</span>
           </div>
-          <span className="text-xs text-slate-500">{task.assignee_name}</span>
+        ) : <span />}
+        <div className="flex items-center gap-2">
+          {commentCount > 0 && (
+            <span className="flex items-center gap-0.5 text-xs text-slate-400">
+              <MessageSquare className="w-3 h-3" /> {commentCount}
+            </span>
+          )}
+          {(task.logged_hours > 0 || task.estimated_hours > 0) && (
+            <span className="text-xs text-slate-400">{task.logged_hours || 0}h/{task.estimated_hours || '—'}h</span>
+          )}
         </div>
-      )}
-      {(task.logged_hours > 0 || task.estimated_hours > 0) && (
-        <div className="mt-2 text-xs text-slate-400">
-          {task.logged_hours || 0}h / {task.estimated_hours || '—'}h
-        </div>
-      )}
+      </div>
     </div>
   );
 }
 
-function TableView({ tasks, onSelect, onDelete }) {
+function TableView({ tasks, onSelect, onDelete, commentCountByTask }) {
   return (
     <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm overflow-x-auto">
       <table className="w-full text-sm">
@@ -263,6 +270,7 @@ function TableView({ tasks, onSelect, onDelete }) {
             <th className="text-left p-4 font-medium text-slate-500">Assegnato</th>
             <th className="text-left p-4 font-medium text-slate-500">Deadline</th>
             <th className="text-left p-4 font-medium text-slate-500">Ore</th>
+            <th className="text-left p-4 font-medium text-slate-500"></th>
             <th className="p-4"></th>
           </tr>
         </thead>
