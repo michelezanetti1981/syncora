@@ -5,7 +5,7 @@ const STATUS_MAP = {
   'Working on it': 'in_progress',
   'Stuck': 'todo',
   'Not Started': 'todo',
-  "In Progress": 'in_progress',
+  'In Progress': 'in_progress',
   'Review': 'review',
   'Completed': 'done',
 };
@@ -17,21 +17,32 @@ function mapStatus(mondayStatus) {
 
 Deno.serve(async (req) => {
   try {
-    const body = await req.json();
+    // Read body first as text so we can parse it without consuming the stream twice
+    const bodyText = await req.text();
+    let body = {};
+    try { body = JSON.parse(bodyText); } catch (_) {}
+
     const { apiKey, mondayBoardId, targetBoardId } = body;
 
-    const base44 = createClientFromRequest(req, { body });
+    // Create a new request with the body restored so the SDK can read auth headers
+    const restoredReq = new Request(req.url, {
+      method: req.method,
+      headers: req.headers,
+      body: bodyText,
+    });
+
+    const base44 = createClientFromRequest(restoredReq);
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
 
     if (!apiKey || !mondayBoardId || !targetBoardId) {
-      return Response.json({ error: 'Missing parameters' }, { status: 400 });
+      return Response.json({ error: 'Parametri mancanti' }, { status: 400 });
     }
 
     const query = `
       query {
         boards(ids: [${mondayBoardId}]) {
-          items_page(limit: 200) {
+          items_page(limit: 500) {
             items {
               id
               name
@@ -39,6 +50,7 @@ Deno.serve(async (req) => {
                 id
                 title
                 text
+                value
               }
             }
           }
@@ -46,29 +58,61 @@ Deno.serve(async (req) => {
       }
     `;
 
-    const response = await fetch('https://api.monday.com/v2', {
+    const mondayRes = await fetch('https://api.monday.com/v2', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': apiKey,
+        'API-Version': '2024-01',
       },
       body: JSON.stringify({ query }),
     });
 
-    const data = await response.json();
+    const data = await mondayRes.json();
 
-    if (data.errors) {
+    if (data.errors?.length) {
       return Response.json({ error: data.errors[0].message }, { status: 400 });
     }
 
-    const items = data?.data?.boards?.[0]?.items_page?.items || [];
+    const items = data?.data?.boards?.[0]?.items_page?.items;
+    if (!items) {
+      return Response.json({ error: 'Bacheca non trovata o API key non valida' }, { status: 400 });
+    }
+
+    if (items.length === 0) {
+      return Response.json({ imported: 0 });
+    }
 
     const tasks = items.map((item, idx) => {
-      const statusCol = item.column_values.find(c => c.id === 'status' || c.title?.toLowerCase() === 'status' || c.title?.toLowerCase() === 'stato');
+      // Look for status column
+      const statusCol = item.column_values.find(c =>
+        c.id === 'status' ||
+        c.title?.toLowerCase() === 'status' ||
+        c.title?.toLowerCase() === 'stato'
+      );
+
+      // Look for description/notes column
+      const descCol = item.column_values.find(c =>
+        c.id === 'text' ||
+        c.title?.toLowerCase() === 'notes' ||
+        c.title?.toLowerCase() === 'description' ||
+        c.title?.toLowerCase() === 'descrizione'
+      );
+
+      // Look for person column (assignee)
+      const personCol = item.column_values.find(c =>
+        c.id === 'person' ||
+        c.title?.toLowerCase() === 'person' ||
+        c.title?.toLowerCase() === 'owner' ||
+        c.title?.toLowerCase() === 'assegnato'
+      );
+
       return {
         title: item.name,
         board_id: targetBoardId,
         status: mapStatus(statusCol?.text),
+        description: descCol?.text || '',
+        assignee_name: personCol?.text || '',
         position: idx,
       };
     });
