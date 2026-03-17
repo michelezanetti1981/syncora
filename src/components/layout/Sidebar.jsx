@@ -82,7 +82,24 @@ export default function Sidebar({ isOpen, setIsOpen }) {
         </nav>
 
         <div className="p-4 border-t border-white/10">
-          <p className="text-xs text-slate-500">© 2026 WorkBoard</p>
+          <Link
+          to="/Profile"
+          onClick={() => setIsOpen(false)}
+          className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all mb-2 ${location.pathname === '/Profile' ? 'bg-indigo-500/20 text-indigo-300' : 'text-slate-400 hover:text-white hover:bg-white/5'}`}
+        >
+          <div className="w-6 h-6 rounded-full bg-indigo-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+            {currentUser?.avatar_url ? (
+              <img src={currentUser.avatar_url} alt="" className="w-full h-full object-cover" />
+            ) : (
+              <UserCircle className="w-4 h-4" />
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate leading-tight">{currentUser?.full_name || currentUser?.email || 'Profilo'}</p>
+            <p className="text-xs text-slate-500 truncate leading-tight">{currentUser?.email}</p>
+          </div>
+        </Link>
+        <p className="text-xs text-slate-500">© 2026 WorkBoard</p>
         </div>
       </aside>
     </>
