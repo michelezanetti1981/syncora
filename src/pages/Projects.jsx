@@ -244,6 +244,39 @@ export default function Projects() {
                 <Input type="date" value={form.end_date} onChange={e => setForm({ ...form, end_date: e.target.value })} />
               </div>
             </div>
+            <div>
+              <Label>Utenti autorizzati</Label>
+              <p className="text-xs text-slate-400 mb-2">Se vuoto, visibile a tutti. Aggiungi utenti per limitare l'accesso.</p>
+              <Select
+                value=""
+                onValueChange={email => {
+                  if (!form.allowed_user_emails.includes(email))
+                    setForm(f => ({ ...f, allowed_user_emails: [...f.allowed_user_emails, email] }));
+                }}
+              >
+                <SelectTrigger><SelectValue placeholder="Aggiungi utente..." /></SelectTrigger>
+                <SelectContent>
+                  {users.filter(u => !form.allowed_user_emails.includes(u.email)).map(u => (
+                    <SelectItem key={u.email} value={u.email}>{u.full_name || u.email}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {form.allowed_user_emails.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mt-2">
+                  {form.allowed_user_emails.map(email => {
+                    const u = users.find(x => x.email === email);
+                    return (
+                      <span key={email} className="flex items-center gap-1 bg-indigo-50 text-indigo-700 text-xs px-2 py-1 rounded-full">
+                        {u?.full_name || email}
+                        <button onClick={() => setForm(f => ({ ...f, allowed_user_emails: f.allowed_user_emails.filter(e => e !== email) }))}>
+                          <X className="w-3 h-3" />
+                        </button>
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
             <Button onClick={() => save.mutate(form)} disabled={!form.name || save.isPending} className="w-full bg-indigo-600 hover:bg-indigo-700">
               {save.isPending ? 'Salvataggio...' : editingProject ? 'Salva modifiche' : 'Crea progetto'}
             </Button>
