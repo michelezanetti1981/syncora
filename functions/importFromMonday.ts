@@ -17,11 +17,12 @@ function mapStatus(mondayStatus) {
 
 Deno.serve(async (req) => {
   try {
-    const base44 = createClientFromRequest(req);
+    const body = await req.json();
+    const { apiKey, mondayBoardId, targetBoardId } = body;
+
+    const base44 = createClientFromRequest(req, { body });
     const user = await base44.auth.me();
     if (!user) return Response.json({ error: 'Unauthorized' }, { status: 401 });
-
-    const { apiKey, mondayBoardId, targetBoardId } = await req.json();
 
     if (!apiKey || !mondayBoardId || !targetBoardId) {
       return Response.json({ error: 'Missing parameters' }, { status: 400 });
