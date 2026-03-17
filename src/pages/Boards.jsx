@@ -88,7 +88,11 @@ export default function Boards() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['boards'] }),
   });
 
-  const activeBoards = boards.filter(b => b.status === 'active');
+  const visibleProjectIds = new Set(visibleProjects.map(p => p.id));
+  const activeBoards = boards
+    .filter(b => b.status === 'active')
+    .filter(b => !b.project_id || visibleProjectIds.has(b.project_id))
+    .filter(b => filterProjectId === 'all' || b.project_id === filterProjectId);
 
   return (
     <div className="space-y-6">
