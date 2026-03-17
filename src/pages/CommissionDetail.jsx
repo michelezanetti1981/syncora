@@ -3,7 +3,7 @@ import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ArrowLeft, Clock, Briefcase, Edit2, Check, X, Mail, Plus, Trash2, Send } from 'lucide-react';
+import { ArrowLeft, Clock, Briefcase, Edit2, Check, X, Mail, Plus, Trash2, Send, Users } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { StatusBadge, PriorityBadge } from '@/components/shared/StatusBadge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';

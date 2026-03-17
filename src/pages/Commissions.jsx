@@ -20,10 +20,17 @@ export default function Commissions() {
   const [form, setForm] = useState({ name: '', client: '', description: '', prepaid_hours: '', start_date: '', end_date: '', status: 'active' });
   const qc = useQueryClient();
 
-  const { data: commissions = [], isLoading } = useQuery({
+  const { data: currentUser } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
+  const isAdmin = currentUser?.role === 'admin';
+
+  const { data: allCommissions = [], isLoading } = useQuery({
     queryKey: ['commissions'],
     queryFn: () => base44.entities.Commission.list('-created_date'),
   });
+
+  const commissions = isAdmin
+    ? allCommissions
+    : allCommissions.filter(c => !c.allowed_user_emails?.length || c.allowed_user_emails.includes(currentUser?.email));
 
   const createCommission = useMutation({
     mutationFn: (data) => base44.entities.Commission.create({ ...data, prepaid_hours: Number(data.prepaid_hours), used_hours: 0 }),
