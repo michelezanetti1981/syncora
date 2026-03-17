@@ -170,7 +170,7 @@ export default function BoardDetail() {
       ) : viewMode === 'kanban' ? (
         <KanbanView tasks={tasks} statusColumns={statusColumns} onSelect={setSelectedTask} onStatusChange={updateStatus} onDelete={deleteTask} commentCountByTask={commentCountByTask} />
       ) : (
-        <TableView tasks={tasks} onSelect={setSelectedTask} onDelete={deleteTask} commentCountByTask={commentCountByTask} />
+        <MondayTableView tasks={tasks} boardId={boardId} onSelect={setSelectedTask} />
       )}
 
       <TaskDialog
