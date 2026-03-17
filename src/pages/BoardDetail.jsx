@@ -79,8 +79,19 @@ export default function BoardDetail() {
 
   const updateStatus = useMutation({
     mutationFn: ({ id, status }) => base44.entities.Task.update(id, { status }),
-    onSuccess: () => qc.invalidateQueries({ queryKey: ['tasks'] }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['tasks', boardId] }),
   });
+
+  const handleDragEnd = (result) => {
+    const { source, destination, draggableId } = result;
+    if (!destination) return;
+    if (source.droppableId === destination.droppableId && source.index === destination.index) return;
+    
+    const task = tasks.find(t => t.id === draggableId);
+    if (task && destination.droppableId !== task.status) {
+      updateStatus.mutate({ id: task.id, status: destination.droppableId });
+    }
+  };
 
   const deleteTask = useMutation({
     mutationFn: async (task) => {
