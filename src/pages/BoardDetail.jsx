@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Plus, ArrowLeft, Trash2, Download, Users, MessageSquare } from 'lucide-react';
 import { exportTasksToExcel } from '@/utils/exportExcel';
 import BoardMembersDialog from '@/components/boards/BoardMembersDialog';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { StatusBadge, PriorityBadge } from '@/components/shared/StatusBadge';
 import TaskDialog from '@/components/tasks/TaskDialog';
 import TaskDetailPanel from '@/components/tasks/TaskDetailPanel';
