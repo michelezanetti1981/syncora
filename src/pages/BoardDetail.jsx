@@ -53,6 +53,22 @@ export default function BoardDetail() {
     enabled: !!boardId,
   });
 
+  const { data: allComments = [] } = useQuery({
+    queryKey: ['comments-board', boardId],
+    queryFn: async () => {
+      if (!tasks.length) return [];
+      const taskIds = new Set(tasks.map(t => t.id));
+      const comments = await base44.entities.Comment.list('-created_date', 1000);
+      return comments.filter(c => taskIds.has(c.task_id));
+    },
+    enabled: tasks.length > 0,
+  });
+
+  const commentCountByTask = allComments.reduce((acc, c) => {
+    acc[c.task_id] = (acc[c.task_id] || 0) + 1;
+    return acc;
+  }, {});
+
   const updateStatus = useMutation({
     mutationFn: ({ id, status }) => base44.entities.Task.update(id, { status }),
     onSuccess: () => qc.invalidateQueries({ queryKey: ['tasks'] }),
