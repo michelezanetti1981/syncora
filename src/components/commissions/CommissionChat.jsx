@@ -7,7 +7,7 @@ import { MessageSquare, Send } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 
-export default function CommissionChat({ commissionId }) {
+export default function BoardChat({ boardId }) {
   const qc = useQueryClient();
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
@@ -16,9 +16,9 @@ export default function CommissionChat({ commissionId }) {
   const { data: currentUser } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
 
   const { data: messages = [] } = useQuery({
-    queryKey: ['commission-messages', commissionId],
-    queryFn: () => base44.entities.ProjectMessage.filter({ commission_id: commissionId }, 'created_date', 200),
-    enabled: !!commissionId,
+    queryKey: ['board-messages', boardId],
+    queryFn: () => base44.entities.ProjectMessage.filter({ board_id: boardId }, 'created_date', 200),
+    enabled: !!boardId,
     refetchInterval: 10000,
   });
 
@@ -30,13 +30,13 @@ export default function CommissionChat({ commissionId }) {
     if (!text.trim()) return;
     setSending(true);
     await base44.entities.ProjectMessage.create({
-      commission_id: commissionId,
+      board_id: boardId,
       content: text.trim(),
       author_email: currentUser?.email,
       author_name: currentUser?.full_name || currentUser?.email,
     });
     setText('');
-    qc.invalidateQueries({ queryKey: ['commission-messages', commissionId] });
+    qc.invalidateQueries({ queryKey: ['board-messages', boardId] });
     setSending(false);
   };
 
