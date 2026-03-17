@@ -15,6 +15,7 @@ import CommissionDetail from '@/pages/CommissionDetail';
 import MyWork from '@/pages/MyWork';
 import Settings from '@/pages/Settings';
 import Profile from '@/pages/Profile';
+import Projects from '@/pages/Projects';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
@@ -52,6 +53,7 @@ const AuthenticatedApp = () => {
         <Route path="/MyWork" element={<MyWork />} />
         <Route path="/Settings" element={<Settings />} />
         <Route path="/Profile" element={<Profile />} />
+        <Route path="/Projects" element={<Projects />} />
       </Route>
       <Route path="*" element={<PageNotFound />} />
     </Routes>

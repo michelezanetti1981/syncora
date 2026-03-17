@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo, Settings, UserCircle } from 'lucide-react';
+import { LayoutDashboard, Kanban, Briefcase, Menu, X, ListTodo, Settings, UserCircle, FolderKanban } from 'lucide-react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { useQuery } from '@tanstack/react-query';
@@ -8,6 +8,7 @@ import { base44 } from '@/api/base44Client';
 
 const baseNavItems = [
   { label: 'Il mio lavoro', path: '/MyWork', icon: ListTodo },
+  { label: 'Progetti', path: '/Projects', icon: FolderKanban },
   { label: 'Bacheche', path: '/Boards', icon: Kanban },
   { label: 'Commesse', path: '/Commissions', icon: Briefcase },
 ];
