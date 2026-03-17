@@ -244,6 +244,7 @@ export default function MondayTableView({ tasks, boardId, onSelect }) {
     { label: 'Registrate', width: 'w-24' },
     { label: 'Commessa', width: 'w-36' },
     { label: 'Deadline', width: 'w-28' },
+    ...customFields.map(f => ({ label: f.label, key: f.key, type: f.type, options: f.options, width: 'w-28' })),
     { label: '', width: 'w-10' },
   ];
 
