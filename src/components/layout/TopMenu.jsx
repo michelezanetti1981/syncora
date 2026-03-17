@@ -4,7 +4,7 @@ import { LayoutDashboard, ListTodo, Settings, ChevronDown } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 
-export default function TopMenu() {
+export default function TopMenu({ direction = 'down' }) {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0 });
   const buttonRef = useRef(null);
