@@ -318,6 +318,67 @@ export default function MondayTableView({ tasks, boardId, onSelect }) {
   );
 }
 
+function CommissionCell({ value, commissions, onSave }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const current = commissions.find(c => c.id === value);
+
+  return (
+    <div ref={ref} className="relative w-full h-full">
+      <div onClick={() => setOpen(o => !o)} className="flex items-center justify-center w-full h-full px-2 py-1 cursor-pointer">
+        {current ? (
+          <span className="text-xs text-slate-700 truncate max-w-[120px]">{current.name}</span>
+        ) : <span className="text-slate-300 text-xs">—</span>}
+      </div>
+      {open && (
+        <div className="absolute z-50 top-full left-0 mt-1 bg-white border border-slate-200 rounded-xl shadow-xl min-w-[180px] py-1 max-h-48 overflow-y-auto">
+          <div onClick={() => { onSave(''); setOpen(false); }} className="px-3 py-1.5 hover:bg-slate-50 cursor-pointer text-xs text-slate-500">Nessuna</div>
+          {commissions.map(c => (
+            <div key={c.id} onClick={() => { onSave(c.id); setOpen(false); }} className="flex items-center gap-2 px-3 py-1.5 hover:bg-slate-50 cursor-pointer">
+              <span className="text-xs text-slate-700">{c.name}</span>
+              {c.id === value && <Check className="w-3 h-3 text-indigo-500 ml-auto" />}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function DateCell({ value, onSave }) {
+  const [editing, setEditing] = useState(false);
+  const inputRef = useRef(null);
+
+  useEffect(() => { if (editing) inputRef.current?.focus(); }, [editing]);
+
+  return (
+    <div className="relative w-full h-full flex items-center justify-center px-2 py-1 cursor-pointer" onClick={() => setEditing(true)}>
+      {editing ? (
+        <input
+          ref={inputRef}
+          type="date"
+          defaultValue={value || ''}
+          onBlur={e => { onSave(e.target.value || null); setEditing(false); }}
+          onChange={e => { onSave(e.target.value || null); setEditing(false); }}
+          className="text-xs bg-transparent outline-none border border-indigo-300 rounded px-1 py-0.5 w-full"
+          autoFocus
+        />
+      ) : (
+        <span className={`text-xs ${value ? 'text-slate-700' : 'text-slate-300'}`}>
+          {value ? format(new Date(value), 'd MMM', { locale: it }) : '—'}
+        </span>
+      )}
+    </div>
+  );
+}
+
 function TaskRow({ task, assignableUsers, commissions, onSave, onDelete, onSelect }) {
   const [hovered, setHovered] = useState(false);
   const [checked, setChecked] = useState(task.status === 'done');
