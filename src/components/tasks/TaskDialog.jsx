@@ -176,7 +176,7 @@ export default function TaskDialog({ open, onClose, task, boardId }) {
               <SelectTrigger><SelectValue placeholder="Seleziona membro" /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="unassigned">Non assegnato</SelectItem>
-                {users.map(u => <SelectItem key={u.id} value={u.email}>{u.full_name || u.email}</SelectItem>)}
+                {assignableUsers.map(u => <SelectItem key={u.email} value={u.email}>{u.name}</SelectItem>)}
               </SelectContent>
             </Select>
           </div>
