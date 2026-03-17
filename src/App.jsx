@@ -14,6 +14,7 @@ import Commissions from '@/pages/Commissions';
 import CommissionDetail from '@/pages/CommissionDetail';
 import MyWork from '@/pages/MyWork';
 import Settings from '@/pages/Settings';
+import Profile from '@/pages/Profile';
 
 const AuthenticatedApp = () => {
   const { isLoadingAuth, isLoadingPublicSettings, authError, navigateToLogin } = useAuth();
