@@ -14,6 +14,7 @@ import EmptyState from '@/components/shared/EmptyState';
 import { format, isPast, isToday } from 'date-fns';
 import { it } from 'date-fns/locale';
 import BoardChat from '@/components/commissions/CommissionChat';
+import MondayTableView from '@/components/tasks/MondayTableView';
 
 const statusColumns = [
   { key: 'backlog', label: 'Backlog', color: 'border-slate-300' },
