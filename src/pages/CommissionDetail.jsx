@@ -261,6 +261,47 @@ export default function CommissionDetail() {
         )}
       </div>
 
+      {/* Utenti autorizzati (solo admin) */}
+      {isAdmin && (
+        <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm p-5 space-y-4">
+          <h2 className="font-semibold text-slate-900 flex items-center gap-2">
+            <Users className="w-4 h-4 text-indigo-500" /> Utenti autorizzati
+          </h2>
+          <p className="text-xs text-slate-500">Se non aggiungi nessun utente, la commessa è visibile a tutti. Aggiungendo utenti, solo loro potranno vederla.</p>
+          <div>
+            <select
+              className="w-full border border-input rounded-md px-3 py-2 text-sm bg-transparent"
+              onChange={e => e.target.value && addAllowedUser(e.target.value)}
+              value=""
+            >
+              <option value="">Aggiungi utente...</option>
+              {allUsers
+                .filter(u => !(commission.allowed_user_emails || []).includes(u.email))
+                .map(u => (
+                  <option key={u.id} value={u.email}>{u.full_name || u.email} ({u.email})</option>
+                ))}
+            </select>
+          </div>
+          {(commission.allowed_user_emails || []).length === 0 ? (
+            <p className="text-sm text-slate-400">Visibile a tutti gli utenti</p>
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {(commission.allowed_user_emails || []).map(email => {
+                const u = allUsers.find(x => x.email === email);
+                return (
+                  <span key={email} className="flex items-center gap-1.5 bg-indigo-50 px-3 py-1.5 rounded-full text-sm text-indigo-700">
+                    {u?.full_name || email}
+                    <button onClick={() => removeAllowedUser(email)} className="text-indigo-400 hover:text-red-500 transition-colors">
+                      <X className="w-3 h-3" />
+                    </button>
+                  </span>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Tasks list */}
       <div className="bg-white rounded-2xl border border-slate-200/60 shadow-sm">
         <div className="p-5 border-b border-slate-100">
