@@ -244,23 +244,11 @@ export default function TaskDetailPanel({ open, onClose, task, onEdit, boardMemb
                 </div>
               ))}
             </div>
-            <div className="flex gap-2">
-              <Textarea
-                placeholder="Scrivi un commento..."
-                value={comment}
-                onChange={(e) => setComment(e.target.value)}
-                rows={2}
-                className="flex-1"
-              />
-              <Button
-                size="icon"
-                onClick={() => addComment.mutate(comment)}
-                disabled={!comment.trim() || addComment.isPending}
-                className="bg-indigo-600 hover:bg-indigo-700 self-end"
-              >
-                <Send className="w-4 h-4" />
-              </Button>
-            </div>
+            <CommentInput
+              onSubmit={(content, mentionedEmails) => addComment.mutate({ content, mentionedEmails })}
+              boardMembers={boardMembers}
+              allUsers={users}
+            />
           </div>
 
           <Button variant="outline" onClick={() => { onClose(); onEdit(task); }} className="w-full">
