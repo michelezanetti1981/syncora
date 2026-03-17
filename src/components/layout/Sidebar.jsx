@@ -25,9 +25,7 @@ const userNavItems = [
 export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
   const { data: currentUser } = useQuery({ queryKey: ['me'], queryFn: () => base44.auth.me() });
-  const navItems = currentUser?.role === 'admin'
-    ? [{ label: 'Dashboard', path: '/Dashboard', icon: LayoutDashboard }, ...baseNavItems, { label: 'Impostazioni', path: '/Settings', icon: Settings }]
-    : baseNavItems;
+  const navItems = currentUser?.role === 'admin' ? adminNavItems : userNavItems;
 
   return (
     <>
