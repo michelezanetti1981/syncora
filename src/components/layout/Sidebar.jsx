@@ -11,6 +11,7 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
   const [projectsExpanded, setProjectsExpanded] = useState(true);
   const [boardsExpanded, setBoardsExpanded] = useState(true);
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
 
   const { data: currentUser } = useQuery({
     queryKey: ['me'],
@@ -39,6 +40,10 @@ export default function Sidebar({ isOpen, setIsOpen }) {
   const visibleBoards = allBoards.filter(b =>
     isAdmin || !b.allowed_user_emails?.length || b.allowed_user_emails.includes(currentUser?.email)
   );
+
+  const boardsInSelectedProject = selectedProjectId
+    ? visibleBoards.filter(b => b.project_id === selectedProjectId)
+    : visibleBoards;
 
   const isActive = (path) => location.pathname.startsWith(path);
 
