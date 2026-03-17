@@ -9,9 +9,7 @@ import TopMenu from './TopMenu';
 
 export default function Sidebar({ isOpen, setIsOpen }) {
   const location = useLocation();
-  const [projectsExpanded, setProjectsExpanded] = useState(true);
-  const [boardsExpanded, setBoardsExpanded] = useState(true);
-  const [selectedProjectId, setSelectedProjectId] = useState(null);
+
 
   const { data: currentUser } = useQuery({
     queryKey: ['me'],
