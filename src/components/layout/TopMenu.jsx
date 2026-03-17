@@ -47,8 +47,8 @@ export default function TopMenu({ direction = 'down' }) {
 
       {open && (
         <div
-          className="fixed w-48 bg-white border border-slate-200 rounded-lg shadow-lg z-[9999]"
-          style={{ top: `${position.top}px`, left: `${position.left}px` }}
+          className={`fixed w-48 bg-white border border-slate-200 rounded-lg shadow-lg z-[9999] ${direction === 'up' ? 'bottom-full' : ''}`}
+          style={{ top: direction === 'down' ? `${position.top}px` : 'auto', bottom: direction === 'up' ? `${window.innerHeight - position.top}px` : 'auto', left: `${position.left}px` }}
         >
           {menuItems.map((item) => {
             const Icon = item.icon;
