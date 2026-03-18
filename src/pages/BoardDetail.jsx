@@ -207,8 +207,10 @@ export default function BoardDetail() {
         <DragDropContext onDragEnd={handleDragEnd}>
           <KanbanView tasks={tasks} statusColumns={statusColumns} onSelect={setSelectedTask} onDelete={deleteTask} commentCountByTask={commentCountByTask} />
         </DragDropContext>
-      ) : (
+      ) : viewMode === 'table' ? (
         <MondayTableView tasks={tasks} boardId={boardId} onSelect={setSelectedTask} />
+      ) : (
+        <GanttView tasks={tasks} onSelect={setSelectedTask} />
       )}
 
       <TaskDialog
