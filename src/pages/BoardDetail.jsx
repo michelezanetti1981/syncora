@@ -165,6 +165,12 @@ export default function BoardDetail() {
             >
               Tabella
             </button>
+            <button
+              onClick={() => setViewMode('gantt')}
+              className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${viewMode === 'gantt' ? 'bg-white shadow-sm text-slate-900' : 'text-slate-500'}`}
+            >
+              Gantt
+            </button>
           </div>
           <Button variant="outline" onClick={() => setChatOpen(o => !o)} className="gap-2">
             <MessageSquare className="w-4 h-4" /> Chat
