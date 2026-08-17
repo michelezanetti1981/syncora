@@ -1,0 +1,74 @@
+{
+  "name": "Project",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome del progetto"
+    },
+    "description": {
+      "type": "string",
+      "description": "Descrizione del progetto"
+    },
+    "client": {
+      "type": "string",
+      "description": "Cliente"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "on_hold"
+      ],
+      "default": "active"
+    },
+    "project_manager_email": {
+      "type": "string",
+      "description": "Email del project manager"
+    },
+    "project_manager_name": {
+      "type": "string",
+      "description": "Nome del project manager"
+    },
+    "responsible_email": {
+      "type": "string",
+      "description": "Email del responsabile di progetto"
+    },
+    "responsible_name": {
+      "type": "string",
+      "description": "Nome del responsabile di progetto"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "color": {
+      "type": "string",
+      "enum": [
+        "indigo",
+        "violet",
+        "emerald",
+        "amber",
+        "rose",
+        "sky",
+        "orange"
+      ],
+      "default": "indigo"
+    },
+    "allowed_user_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Email degli utenti autorizzati. Se vuoto, visibile a tutti."
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

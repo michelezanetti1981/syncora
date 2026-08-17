@@ -1,0 +1,73 @@
+{
+  "name": "Commission",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Commission name"
+    },
+    "client": {
+      "type": "string",
+      "description": "Client name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Commission description"
+    },
+    "prepaid_hours": {
+      "type": "number",
+      "description": "Total prepaid hours"
+    },
+    "used_hours": {
+      "type": "number",
+      "default": 0,
+      "description": "Hours consumed by tasks"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "on_hold"
+      ],
+      "default": "active"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "referenti": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Email dei referenti per i report"
+    },
+    "report_frequency": {
+      "type": "string",
+      "enum": [
+        "none",
+        "weekly",
+        "monthly"
+      ],
+      "default": "none",
+      "description": "Frequenza invio report automatico"
+    },
+    "allowed_user_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Email degli utenti autorizzati a vedere questa commessa"
+    }
+  },
+  "required": [
+    "name",
+    "client",
+    "prepaid_hours"
+  ]
+}

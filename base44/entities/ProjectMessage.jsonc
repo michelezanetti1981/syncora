@@ -1,0 +1,23 @@
+{
+  "name": "ProjectMessage",
+  "type": "object",
+  "properties": {
+    "board_id": {
+      "type": "string",
+      "description": "Board this message belongs to"
+    },
+    "author_email": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string"
+    },
+    "content": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "board_id",
+    "content"
+  ]
+}

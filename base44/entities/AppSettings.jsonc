@@ -1,0 +1,45 @@
+{
+  "name": "AppSettings",
+  "type": "object",
+  "properties": {
+    "logo_url": {
+      "type": "string",
+      "description": "URL del logo dell'app"
+    },
+    "company_name": {
+      "type": "string",
+      "description": "Nome dell'azienda"
+    },
+    "smtp_host": {
+      "type": "string",
+      "description": "Host SMTP"
+    },
+    "smtp_port": {
+      "type": "number",
+      "description": "Porta SMTP",
+      "default": 587
+    },
+    "smtp_user": {
+      "type": "string",
+      "description": "Username SMTP"
+    },
+    "smtp_password": {
+      "type": "string",
+      "description": "Password SMTP"
+    },
+    "smtp_from_name": {
+      "type": "string",
+      "description": "Nome mittente"
+    },
+    "smtp_from_email": {
+      "type": "string",
+      "description": "Email mittente"
+    },
+    "smtp_secure": {
+      "type": "boolean",
+      "default": false,
+      "description": "Usa SSL/TLS"
+    }
+  },
+  "required": []
+}

@@ -1,0 +1,96 @@
+{
+  "name": "Task",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Task title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Task description"
+    },
+    "board_id": {
+      "type": "string",
+      "description": "Board this task belongs to"
+    },
+    "commission_id": {
+      "type": "string",
+      "description": "Associated commission"
+    },
+    "assignee_email": {
+      "type": "string",
+      "description": "Assigned team member email"
+    },
+    "assignee_name": {
+      "type": "string",
+      "description": "Assigned team member name"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "backlog",
+        "todo",
+        "in_progress",
+        "review",
+        "done"
+      ],
+      "default": "todo"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "estimated_hours": {
+      "type": "number",
+      "description": "Estimated hours"
+    },
+    "logged_hours": {
+      "type": "number",
+      "default": 0,
+      "description": "Actual hours logged"
+    },
+    "file_urls": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Attached file URLs"
+    },
+    "file_names": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Attached file names"
+    },
+    "group_name": {
+      "type": "string",
+      "default": "Generale",
+      "description": "Group within the board"
+    },
+    "position": {
+      "type": "number",
+      "default": 0
+    },
+    "custom_fields": {
+      "type": "object",
+      "description": "Custom field values stored as key-value pairs",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "title",
+    "board_id"
+  ]
+}

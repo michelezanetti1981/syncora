@@ -1,0 +1,43 @@
+{
+  "name": "Board",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Board name"
+    },
+    "description": {
+      "type": "string",
+      "description": "Board description"
+    },
+    "color": {
+      "type": "string",
+      "enum": [
+        "indigo",
+        "violet",
+        "emerald",
+        "amber",
+        "rose",
+        "sky",
+        "orange"
+      ],
+      "default": "indigo",
+      "description": "Board accent color"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "archived"
+      ],
+      "default": "active"
+    },
+    "project_id": {
+      "type": "string",
+      "description": "Progetto associato"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

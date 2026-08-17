@@ -1,0 +1,39 @@
+{
+  "name": "Notification",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Recipient email"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "task_assigned",
+        "mention",
+        "chat_message"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "read": {
+      "type": "boolean",
+      "default": false
+    },
+    "board_id": {
+      "type": "string"
+    },
+    "task_id": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_email",
+    "type",
+    "title"
+  ]
+}
